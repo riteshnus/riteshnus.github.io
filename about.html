@@ -4,575 +4,488 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About — Ritesh Kumar Agrahari</title>
-  <meta name="description" content="Senior Platform Engineer with 11+ years in Cloud, DevOps, and Platform Engineering. Currently at Oracle building AI Data Platform.">
+  <meta name="description" content="Senior Platform Engineer with 11+ years in Cloud, DevOps, and Platform Engineering. MS Software Engineering, NUS Singapore. Currently at Oracle building AI Data Platform.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #ffffff;
-      --bg-soft: #f9fafb;
-      --text: #111827;
-      --muted: #6b7280;
-      --lighter: #9ca3af;
-      --accent: #1d4ed8;
-      --accent-bg: #eff6ff;
-      --border: #e5e7eb;
-      --border-hover: #d1d5db;
+      --bg: #ffffff; --bg-soft: #f9fafb;
+      --text: #111827; --muted: #6b7280; --lighter: #9ca3af;
+      --accent: #1d4ed8; --accent-bg: #eff6ff;
+      --border: #e5e7eb; --border-hover: #d1d5db;
     }
-
     html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      font-size: 16px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-    }
-
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
     a { text-decoration: none; color: inherit; }
 
-    /* ── NAV ── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .nav-inner {
-      max-width: 1100px; margin: 0 auto; padding: 0 24px;
-      height: 60px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 60px; display: flex; align-items: center; justify-content: space-between; }
     .nav-logo { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
     .nav-logo span { color: var(--muted); font-weight: 400; }
     .nav-links { display: flex; align-items: center; gap: 32px; }
     .nav-links a { font-size: 14px; font-weight: 500; color: var(--muted); transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
-    .nav-links a.active {
-      color: var(--text);
-      border-bottom: 1.5px solid var(--text);
-      padding-bottom: 2px;
-    }
+    .nav-links a.active { color: var(--text); border-bottom: 1.5px solid var(--text); padding-bottom: 2px; }
 
-    /* ── LAYOUT ── */
     .page-wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
 
-    /* ── PAGE HERO ── */
-    .page-hero {
-      padding: 64px 0 52px;
-      border-bottom: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 48px;
-      align-items: center;
-    }
-    .page-eyebrow {
-      font-size: 12px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 1.5px;
-      color: var(--accent); margin-bottom: 14px;
-    }
-    .page-title {
-      font-family: 'Lora', Georgia, serif;
-      font-size: 38px; font-weight: 600;
-      line-height: 1.2; letter-spacing: -0.5px;
-      margin-bottom: 16px;
-    }
-    .page-bio {
-      font-size: 16px; color: var(--muted);
-      line-height: 1.75; max-width: 560px;
-    }
+    .page-hero { padding: 64px 0 52px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: 1fr 180px; gap: 48px; align-items: start; }
+    .page-eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 14px; }
+    .page-title { font-family: 'Lora', Georgia, serif; font-size: 38px; font-weight: 600; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .page-role { font-size: 16px; color: var(--muted); font-weight: 500; margin-bottom: 20px; }
+    .page-bio { font-size: 15px; color: var(--muted); line-height: 1.8; max-width: 580px; }
     .page-bio p { margin-bottom: 14px; }
     .page-bio p:last-child { margin-bottom: 0; }
 
-    /* Avatar placeholder */
-    .avatar-wrap {
-      display: flex; flex-direction: column; align-items: center; gap: 12px;
-    }
-    .avatar {
-      width: 96px; height: 96px; border-radius: 50%;
-      background: var(--bg-soft);
-      border: 2px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 32px; font-weight: 700; color: var(--muted);
-      letter-spacing: -1px;
-    }
-    .avatar-name { font-size: 13px; font-weight: 600; color: var(--text); text-align: center; }
-    .avatar-location { font-size: 12px; color: var(--lighter); text-align: center; }
+    .photo-col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .photo-wrap { width: 150px; height: 150px; border-radius: 50%; overflow: hidden; border: 3px solid var(--border); flex-shrink: 0; }
+    .photo-wrap img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+    .photo-name { font-size: 12px; font-weight: 600; color: var(--text); text-align: center; }
+    .photo-location { font-size: 11px; color: var(--lighter); text-align: center; }
+    .resume-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--accent); border: 1px solid var(--accent); background: var(--accent-bg); padding: 7px 14px; border-radius: 6px; transition: all 0.15s; margin-top: 4px; white-space: nowrap; }
+    .resume-btn:hover { background: var(--accent); color: white; }
+    .resume-btn svg { width: 12px; height: 12px; }
 
-    /* ── SECTION ── */
-    .section {
-      padding: 52px 0;
-      border-bottom: 1px solid var(--border);
-    }
+    .section { padding: 44px 0; border-bottom: 1px solid var(--border); }
     .section:last-of-type { border-bottom: none; }
-    .section-label {
-      font-size: 12px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 1.5px;
-      color: var(--lighter); margin-bottom: 32px;
-    }
+    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.8px; color: var(--lighter); margin-bottom: 28px; }
 
-    /* ── EXPERIENCE ── */
-    .experience-list { display: flex; flex-direction: column; gap: 0; }
-    .exp-item {
-      display: grid;
-      grid-template-columns: 160px 1fr;
-      gap: 32px;
-      padding: 24px 0;
-      border-bottom: 1px solid var(--border);
-      position: relative;
-    }
-    .exp-item:last-child { border-bottom: none; }
-    .exp-left {}
-    .exp-period {
-      font-size: 12px; color: var(--lighter);
-      font-weight: 500; margin-bottom: 4px;
-    }
-    .exp-location {
-      font-size: 11px; color: var(--lighter);
-      display: flex; align-items: center; gap: 4px;
-    }
-    .exp-right {}
-    .exp-company {
-      font-size: 14px; font-weight: 700; color: var(--text);
-      margin-bottom: 2px;
-    }
-    .exp-role {
-      font-size: 14px; font-weight: 500; color: var(--muted);
-      margin-bottom: 10px;
-    }
-    .exp-desc {
-      font-size: 14px; color: var(--muted);
-      line-height: 1.7; margin-bottom: 12px;
-    }
+    .exp-item { display: grid; grid-template-columns: 180px 1fr; gap: 32px; padding: 24px 0; border-bottom: 1px solid var(--border); }
+    .exp-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .exp-period { font-size: 12px; color: var(--lighter); font-weight: 500; line-height: 1.6; margin-bottom: 3px; }
+    .exp-location { font-size: 11px; color: var(--lighter); }
+    .exp-company { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .exp-current { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 20px; }
+    .exp-role { font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 12px; }
+    .exp-bullets { list-style: none; margin-bottom: 14px; }
+    .exp-bullets li { font-size: 13px; color: var(--muted); line-height: 1.7; padding: 3px 0 3px 16px; position: relative; }
+    .exp-bullets li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-size: 10px; top: 5px; }
     .exp-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .exp-tag {
-      font-size: 11px; font-weight: 500; color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 3px 9px; border-radius: 20px;
-      background: var(--bg-soft);
-    }
-    .exp-current {
-      display: inline-block;
-      font-size: 10px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.8px;
-      background: #dcfce7; color: #15803d;
-      padding: 2px 8px; border-radius: 20px;
-      margin-left: 8px; vertical-align: middle;
-    }
+    .exp-tag { font-size: 11px; font-weight: 500; color: var(--muted); border: 1px solid var(--border); padding: 3px 9px; border-radius: 20px; background: var(--bg-soft); }
 
-    /* ── SKILLS ── */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 24px;
-    }
-    .skill-group {}
-    .skill-group-name {
-      font-size: 12px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 1px;
-      color: var(--lighter); margin-bottom: 12px;
-    }
-    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .skill-tag {
-      font-size: 12px; font-weight: 500;
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 5px 12px; border-radius: 6px;
-      background: var(--bg-soft);
-    }
-    .skill-tag.strong {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--accent-bg);
-    }
-
-    /* ── EDUCATION ── */
-    .edu-item {
-      display: grid;
-      grid-template-columns: 160px 1fr;
-      gap: 32px;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .edu-item:last-child { border-bottom: none; }
+    .edu-item { display: grid; grid-template-columns: 180px 1fr; gap: 32px; padding: 20px 0; border-bottom: 1px solid var(--border); }
+    .edu-item:last-child { border-bottom: none; padding-bottom: 0; }
     .edu-year { font-size: 12px; color: var(--lighter); font-weight: 500; }
-    .edu-right {}
-    .edu-degree { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-    .edu-school { font-size: 14px; color: var(--muted); }
+    .edu-school-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .edu-rank { font-size: 11px; color: var(--accent); font-weight: 600; margin-bottom: 3px; }
+    .edu-degree { font-size: 13px; color: var(--muted); }
 
-    /* ── WRITING QUICK LIST ── */
-    .writing-list { display: flex; flex-direction: column; gap: 0; }
-    .writing-item {
-      display: flex; align-items: baseline;
-      justify-content: space-between;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border);
-      gap: 20px;
-    }
+    .certs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
+    .cert-card { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; background: var(--bg-soft); }
+    .cert-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .cert-issuer { font-size: 12px; color: var(--muted); }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; }
+    .skill-group-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--lighter); margin-bottom: 10px; }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .skill-tag { font-size: 12px; font-weight: 500; color: var(--text); border: 1px solid var(--border); padding: 4px 11px; border-radius: 6px; background: var(--bg-soft); }
+    .skill-tag.strong { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); }
+
+    .writing-item { display: flex; align-items: baseline; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--border); gap: 20px; }
     .writing-item:last-child { border-bottom: none; }
-    .writing-left { display: flex; align-items: baseline; gap: 14px; flex: 1; }
-    .writing-tag {
-      font-size: 10px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.8px;
-      color: var(--accent); background: var(--accent-bg);
-      padding: 2px 8px; border-radius: 20px; white-space: nowrap;
-    }
-    .writing-title {
-      font-size: 15px; font-weight: 500; color: var(--text);
-      transition: color 0.15s;
-    }
+    .writing-left { display: flex; align-items: baseline; gap: 12px; flex: 1; }
+    .writing-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--accent); background: var(--accent-bg); padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+    .writing-title { font-size: 14px; font-weight: 500; color: var(--text); transition: color 0.15s; }
     .writing-item:hover .writing-title { color: var(--accent); }
-    .writing-right { display: flex; align-items: center; gap: 16px; }
+    .writing-right { display: flex; align-items: center; gap: 12px; }
     .writing-date { font-size: 12px; color: var(--lighter); white-space: nowrap; }
-    .writing-platform {
-      font-size: 11px; color: var(--lighter);
-      border: 1px solid var(--border);
-      padding: 2px 8px; border-radius: 4px;
-      white-space: nowrap;
-    }
+    .writing-platform { font-size: 11px; color: var(--lighter); border: 1px solid var(--border); padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
 
-    /* ── CONTACT ── */
-    .contact-links { display: flex; flex-wrap: wrap; gap: 12px; }
-    .contact-link {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-size: 14px; font-weight: 500; color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 10px 18px; border-radius: 8px;
-      transition: all 0.15s;
-    }
+    .contact-links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .contact-link { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: var(--muted); border: 1px solid var(--border); padding: 10px 18px; border-radius: 8px; transition: all 0.15s; }
     .contact-link:hover { color: var(--text); border-color: var(--border-hover); background: var(--bg-soft); }
-    .contact-link svg { width: 16px; height: 16px; }
+    .contact-link svg { width: 15px; height: 15px; }
 
-    /* ── FOOTER ── */
-    footer { border-top: 1px solid var(--border); padding: 32px 0; margin-top: 0; }
-    .footer-inner {
-      max-width: 1100px; margin: 0 auto; padding: 0 24px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
+    footer { border-top: 1px solid var(--border); padding: 32px 0; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
     .footer-copy { font-size: 13px; color: var(--lighter); }
     .footer-links { display: flex; align-items: center; gap: 20px; }
     .footer-links a { font-size: 13px; color: var(--lighter); transition: color 0.15s; }
     .footer-links a:hover { color: var(--muted); }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .page-hero { grid-template-columns: 1fr; }
+      .photo-col { flex-direction: row; align-items: center; gap: 20px; }
       .page-title { font-size: 28px; }
-      .exp-item, .edu-item { grid-template-columns: 1fr; gap: 8px; }
-      .writing-item { flex-direction: column; gap: 6px; }
-      .writing-right { gap: 10px; }
+      .exp-item, .edu-item { grid-template-columns: 1fr; gap: 6px; }
+      .writing-item { flex-direction: column; gap: 4px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <div class="nav-inner">
-      <a href="index.html" class="nav-logo">Ritesh Kumar Agrahari <span>· Platform Engineer</span></a>
-      <div class="nav-links">
-        <a href="index.html">Blog</a>
-        <a href="about.html" class="active">About</a>
-        <a href="https://linkedin.com/in/ritesh-kumar-agrahari" target="_blank" rel="noopener">LinkedIn ↗</a>
-      </div>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Ritesh Kumar Agrahari <span>· Platform Engineer</span></a>
+    <div class="nav-links">
+      <a href="index.html">Blog</a>
+      <a href="about.html" class="active">About</a>
+      <a href="https://linkedin.com/in/riteshagrahari" target="_blank" rel="noopener">LinkedIn ↗</a>
     </div>
-  </nav>
-
-  <div class="page-wrap">
-
-    <!-- PAGE HERO -->
-    <section class="page-hero">
-      <div>
-        <div class="page-eyebrow">About</div>
-        <h1 class="page-title">Ritesh Kumar Agrahari</h1>
-        <div class="page-bio">
-          <p>Senior Platform Engineer with 11+ years building cloud infrastructure, DevOps platforms, and distributed systems across four countries. Currently Senior Member of Technical Staff at Oracle, working on AI Data Platform (AIDP) and OCI Data Catalog.</p>
-          <p>I write about the real engineering problems that come with operating infrastructure at scale — Terraform testing, GitOps, Kubernetes, and increasingly, how AI is changing the way platform teams work.</p>
-          <p>Previously the first technical hire at AELER Technologies in Switzerland, a technology consultant at PALO-IT Singapore, and a DevOps engineer at British Telecom. I enjoy the complexity of cloud systems and the challenge of making them simple for the teams that depend on them.</p>
-        </div>
-      </div>
-      <div class="avatar-wrap">
-        <div class="avatar">RK</div>
-        <div class="avatar-name">Ritesh Kumar Agrahari</div>
-        <div class="avatar-location">📍 Bangalore, India</div>
-      </div>
-    </section>
-
-    <!-- EXPERIENCE -->
-    <section class="section" id="resume">
-      <div class="section-label">Experience</div>
-      <div class="experience-list">
-
-        <div class="exp-item">
-          <div class="exp-left">
-            <div class="exp-period">Nov 2023 — Present</div>
-            <div class="exp-location">Bangalore, India</div>
-          </div>
-          <div class="exp-right">
-            <div class="exp-company">Oracle <span class="exp-current">Current</span></div>
-            <div class="exp-role">Senior Member of Technical Staff</div>
-            <div class="exp-desc">Building and operating two flagship Oracle Cloud products — AI Data Platform (AIDP) and OCI Data Catalog (DCAT). Responsible for platform engineering, infrastructure automation, and DevOps practices across both products.</div>
-            <div class="exp-tags">
-              <span class="exp-tag">OCI</span>
-              <span class="exp-tag">Terraform</span>
-              <span class="exp-tag">Kubernetes</span>
-              <span class="exp-tag">AI Data Platform</span>
-              <span class="exp-tag">GitOps</span>
-              <span class="exp-tag">ArgoCD</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="exp-item">
-          <div class="exp-left">
-            <div class="exp-period">2021 — 2023</div>
-            <div class="exp-location">Switzerland</div>
-          </div>
-          <div class="exp-right">
-            <div class="exp-company">AELER Technologies</div>
-            <div class="exp-role">First Technical Hire · Platform Engineering</div>
-            <div class="exp-desc">Joined as the first technical hire at a deep-tech startup building next-generation shipping containers. Built the entire cloud and DevOps foundation from scratch — infrastructure, CI/CD pipelines, and platform tooling.</div>
-            <div class="exp-tags">
-              <span class="exp-tag">AWS</span>
-              <span class="exp-tag">Terraform</span>
-              <span class="exp-tag">Kubernetes</span>
-              <span class="exp-tag">Platform Engineering</span>
-              <span class="exp-tag">Startup</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="exp-item">
-          <div class="exp-left">
-            <div class="exp-period">2018 — 2021</div>
-            <div class="exp-location">Singapore</div>
-          </div>
-          <div class="exp-right">
-            <div class="exp-company">PALO-IT</div>
-            <div class="exp-role">DevOps / Platform Engineer · Technology Consultant</div>
-            <div class="exp-desc">Global technology innovation consultancy. Delivered DevOps transformation and cloud platform engineering across multiple client engagements in Singapore and the APAC region.</div>
-            <div class="exp-tags">
-              <span class="exp-tag">Azure</span>
-              <span class="exp-tag">Azure DevOps</span>
-              <span class="exp-tag">Docker</span>
-              <span class="exp-tag">Kubernetes</span>
-              <span class="exp-tag">Consulting</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="exp-item">
-          <div class="exp-left">
-            <div class="exp-period">2016 — 2018</div>
-            <div class="exp-location">United Kingdom</div>
-          </div>
-          <div class="exp-right">
-            <div class="exp-company">British Telecom</div>
-            <div class="exp-role">DevOps Engineer</div>
-            <div class="exp-desc">DevOps and platform engineering at one of Europe's largest telecommunications companies. Worked on large-scale CI/CD pipelines and infrastructure automation for enterprise systems.</div>
-            <div class="exp-tags">
-              <span class="exp-tag">CI/CD</span>
-              <span class="exp-tag">Linux</span>
-              <span class="exp-tag">Automation</span>
-              <span class="exp-tag">Enterprise</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="exp-item">
-          <div class="exp-left">
-            <div class="exp-period">2013 — 2016</div>
-            <div class="exp-location">India</div>
-          </div>
-          <div class="exp-right">
-            <div class="exp-company">Accenture / Cisco</div>
-            <div class="exp-role">Cloud & Infrastructure Engineer</div>
-            <div class="exp-desc">Started career in cloud infrastructure and systems engineering. Worked across Accenture's delivery teams on Cisco infrastructure projects, building foundational skills in cloud, networking, and systems operations.</div>
-            <div class="exp-tags">
-              <span class="exp-tag">Cloud</span>
-              <span class="exp-tag">Networking</span>
-              <span class="exp-tag">Infrastructure</span>
-              <span class="exp-tag">Cisco</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section class="section">
-      <div class="section-label">Core Skills</div>
-      <div class="skills-grid">
-
-        <div class="skill-group">
-          <div class="skill-group-name">Infrastructure & Cloud</div>
-          <div class="skill-tags">
-            <span class="skill-tag strong">Terraform</span>
-            <span class="skill-tag strong">OCI</span>
-            <span class="skill-tag strong">AWS</span>
-            <span class="skill-tag">Azure</span>
-            <span class="skill-tag">GCP</span>
-            <span class="skill-tag">Multicloud</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="skill-group-name">Containers & Orchestration</div>
-          <div class="skill-tags">
-            <span class="skill-tag strong">Kubernetes</span>
-            <span class="skill-tag strong">Helm</span>
-            <span class="skill-tag">Docker</span>
-            <span class="skill-tag">ArgoCD</span>
-            <span class="skill-tag">GitOps</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="skill-group-name">CI/CD & DevOps</div>
-          <div class="skill-tags">
-            <span class="skill-tag strong">GitHub Actions</span>
-            <span class="skill-tag">Jenkins</span>
-            <span class="skill-tag">Azure DevOps</span>
-            <span class="skill-tag">GitLab CI</span>
-            <span class="skill-tag">ArgoCD</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="skill-group-name">Languages & Scripting</div>
-          <div class="skill-tags">
-            <span class="skill-tag strong">Bash / Shell</span>
-            <span class="skill-tag">Python</span>
-            <span class="skill-tag">Go</span>
-            <span class="skill-tag">HCL</span>
-            <span class="skill-tag">YAML</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="skill-group-name">Observability</div>
-          <div class="skill-tags">
-            <span class="skill-tag">Prometheus</span>
-            <span class="skill-tag">Grafana</span>
-            <span class="skill-tag">ELK Stack</span>
-            <span class="skill-tag">Datadog</span>
-          </div>
-        </div>
-
-        <div class="skill-group">
-          <div class="skill-group-name">Emerging</div>
-          <div class="skill-tags">
-            <span class="skill-tag strong">AI/ML Ops</span>
-            <span class="skill-tag strong">RAG</span>
-            <span class="skill-tag">LLM Integration</span>
-            <span class="skill-tag">Vector DBs</span>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- EDUCATION -->
-    <section class="section">
-      <div class="section-label">Education</div>
-      <div class="edu-item">
-        <div class="edu-year"><!-- Your grad year --></div>
-        <div class="edu-right">
-          <div class="edu-degree"><!-- Your Degree, e.g. B.Tech in Computer Science --></div>
-          <div class="edu-school"><!-- Your University --></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- WRITING -->
-    <section class="section">
-      <div class="section-label">Writing</div>
-      <div class="writing-list">
-
-        <a href="terraform-testing-part1.html" class="writing-item">
-          <div class="writing-left">
-            <span class="writing-tag">Terraform</span>
-            <span class="writing-title">Terraform Component Testing: Stop Shipping Broken Infrastructure (Part 1)</span>
-          </div>
-          <div class="writing-right">
-            <span class="writing-date">May 2026</span>
-            <span class="writing-platform">This site</span>
-          </div>
-        </a>
-
-        <a href="terraform-testing-part2.html" class="writing-item">
-          <div class="writing-left">
-            <span class="writing-tag">AI · DevOps</span>
-            <span class="writing-title">Terraform Testing at Scale: CI/CD, Pitfalls & the AI Frontier (Part 2)</span>
-          </div>
-          <div class="writing-right">
-            <span class="writing-date">May 2026</span>
-            <span class="writing-platform">This site</span>
-          </div>
-        </a>
-
-        <a href="https://medium.com/@ritesh.nus/time-to-expand-multicloud-options-87686ce8f277" target="_blank" class="writing-item">
-          <div class="writing-left">
-            <span class="writing-tag">Cloud</span>
-            <span class="writing-title">Time to Expand Multicloud Options ↗</span>
-          </div>
-          <div class="writing-right">
-            <span class="writing-date">May 2026</span>
-            <span class="writing-platform">Medium</span>
-          </div>
-        </a>
-
-        <a href="https://medium.com/paloit/azure-devops-as-one-stop-shop-5d64901da54b" target="_blank" class="writing-item">
-          <div class="writing-left">
-            <span class="writing-tag">DevOps</span>
-            <span class="writing-title">Azure DevOps: Everything You Need To Orchestrate Your DevOps Toolchain ↗</span>
-          </div>
-          <div class="writing-right">
-            <span class="writing-date">Apr 2020</span>
-            <span class="writing-platform">Medium · PALO-IT</span>
-          </div>
-        </a>
-
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section class="section">
-      <div class="section-label">Find Me</div>
-      <div class="contact-links">
-        <a href="https://linkedin.com/in/ritesh-kumar-agrahari" target="_blank" class="contact-link">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-          LinkedIn
-        </a>
-        <a href="https://github.com/ritesh-agrahari" target="_blank" class="contact-link">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
-          GitHub
-        </a>
-        <a href="https://medium.com/@ritesh.nus" target="_blank" class="contact-link">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
-          Medium
-        </a>
-      </div>
-    </section>
-
   </div>
+</nav>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-inner">
-      <span class="footer-copy">© 2026 Ritesh Kumar Agrahari</span>
-      <div class="footer-links">
-        <a href="https://linkedin.com/in/ritesh-kumar-agrahari" target="_blank">LinkedIn</a>
-        <a href="https://github.com/ritesh-agrahari" target="_blank">GitHub</a>
-        <a href="https://medium.com/@ritesh.nus" target="_blank">Medium</a>
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <div>
+      <div class="page-eyebrow">About</div>
+      <h1 class="page-title">Ritesh Kumar Agrahari</h1>
+      <div class="page-role">Senior Platform Engineer & Cloud Architect · 11+ Years</div>
+      <div class="page-bio">
+        <p>Senior DevOps & Cloud Platform Engineer with 11+ years designing and automating enterprise infrastructure across AWS, Azure, and Oracle Cloud. Deep expertise in Kubernetes, Terraform, CI/CD, DevSecOps, and multi-region cloud architecture — with a track record of delivering high-reliability platforms for global financial, government, and sustainability sector clients.</p>
+        <p>Currently at Oracle, driving platform engineering, release management, and Agentic AI infrastructure for flagship OCI products. Previously spent 5 years at PALO-IT Singapore, delivering marquee projects including Climate ImpactX — Singapore's global carbon exchange processing 12,000 tonnes of carbon credits on day one — and DBS Retail Marketplace serving 5+ million customers.</p>
+        <p>MS in Software Engineering from NUS Singapore (Global Rank #9). Selected for NUS Overseas College — a competitive startup immersion programme for entrepreneurial students — and completed an entrepreneurship programme at EPFL Switzerland.</p>
       </div>
     </div>
-  </footer>
+    <div class="photo-col">
+      <div class="photo-wrap">
+        <img src="photo.jpg" alt="Ritesh Kumar Agrahari at Marina Bay, Singapore">
+      </div>
+      <div class="photo-name">Ritesh Kumar Agrahari</div>
+      <div class="photo-location">📍 Bangalore, India</div>
+      <a href="RiteshAgrahari_Resume.pdf" target="_blank" class="resume-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Download Resume
+      </a>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section" id="resume">
+    <div class="section-label">Work Experience</div>
+
+    <div class="exp-item">
+      <div>
+        <div class="exp-period">Nov 2023 — Present</div>
+        <div class="exp-location">Bangalore, India</div>
+      </div>
+      <div>
+        <div class="exp-company">Oracle <span class="exp-current">Current</span></div>
+        <div class="exp-role">Senior Member of Technical Staff</div>
+        <ul class="exp-bullets">
+          <li>Led release management, environment upgrades, and deployment automation for OCI Data Catalog (DCAT) and AI Data Platform (AIDP) across dev, staging, and production environments.</li>
+          <li>Provisioned and maintained multi-region OCI infrastructure using Terraform, ensuring consistent, reproducible environments and eliminating manual configuration drift.</li>
+          <li>Orchestrated automated deployment pipelines via Shepherd (Oracle's in-house CI/CD), streamlining structured rollouts across global OCI regions.</li>
+          <li>Implemented DevSecOps practices — secrets management via Vault, static code analysis with SonarQube, and security-gated CI/CD pipelines across multi-region OCI deployments.</li>
+          <li>Built Python-based automation scripts for deployment validation, health checks, and upgrade orchestration, reducing manual toil significantly.</li>
+        </ul>
+        <div class="exp-tags">
+          <span class="exp-tag">Oracle Cloud</span>
+          <span class="exp-tag">Terraform</span>
+          <span class="exp-tag">Kubernetes</span>
+          <span class="exp-tag">Helm</span>
+          <span class="exp-tag">Shepherd CI/CD</span>
+          <span class="exp-tag">Agentic AI</span>
+          <span class="exp-tag">Python</span>
+          <span class="exp-tag">Vault</span>
+          <span class="exp-tag">SonarQube</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div>
+        <div class="exp-period">Sep 2018 — Oct 2023</div>
+        <div class="exp-location">Singapore · 5 years</div>
+      </div>
+      <div>
+        <div class="exp-company">PALO-IT</div>
+        <div class="exp-role">Senior Cloud & DevOps Consultant</div>
+        <ul class="exp-bullets">
+          <li>Architected cloud infrastructure for Climate ImpactX (CIX) — Singapore's global carbon exchange backed by DBS, SGX, Standard Chartered & Temasek on Nasdaq's platform, processing 12,000 tonnes of carbon credits on day one across 50+ countries.</li>
+          <li>Engineered multi-cloud (AWS + Azure) pipeline connecting CIX's microservices to Nasdaq's trading technology, enabling real-time spot trading of standardised carbon contracts globally.</li>
+          <li>Built serverless backend and full-stack frontend for DBS Retail Marketplace — unifying Singapore Airlines, property listings, car deals, and financial products under one payment engine for 5+ million customers.</li>
+          <li>Deployed cloud infrastructure for HDB's automated parking system — operational across 1.25 million housing units covering tracking, payments, and partner API integration.</li>
+        </ul>
+        <div class="exp-tags">
+          <span class="exp-tag">AWS</span>
+          <span class="exp-tag">Azure</span>
+          <span class="exp-tag">Terraform</span>
+          <span class="exp-tag">Kubernetes</span>
+          <span class="exp-tag">ArgoCD</span>
+          <span class="exp-tag">Azure DevOps</span>
+          <span class="exp-tag">Service Mesh</span>
+          <span class="exp-tag">Serverless</span>
+          <span class="exp-tag">Python</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div>
+        <div class="exp-period">Jan 2018 — Jul 2018</div>
+        <div class="exp-location">Lausanne, Switzerland</div>
+      </div>
+      <div>
+        <div class="exp-company">AELER Technologies</div>
+        <div class="exp-role">Full Stack Developer · First Technical Hire</div>
+        <ul class="exp-bullets">
+          <li>Bootstrapped AELER's entire engineering stack as the first technical hire, taking the startup from zero to a fully operational IoT platform post-founding.</li>
+          <li>Built a real-time fleet management dashboard integrating live IoT sensor data from smart containers — GPS tracking, condition monitoring, and shipment analytics.</li>
+          <li>Delivered MVP end-to-end: application design, NoSQL integration, and WebSocket-based live updates. Built interactive graph dashboard using React and D3.</li>
+        </ul>
+        <div class="exp-tags">
+          <span class="exp-tag">ReactJS</span>
+          <span class="exp-tag">TypeScript</span>
+          <span class="exp-tag">NodeJS</span>
+          <span class="exp-tag">MongoDB</span>
+          <span class="exp-tag">AWS</span>
+          <span class="exp-tag">WebSocket</span>
+          <span class="exp-tag">IoT</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div>
+        <div class="exp-period">Jun 2016 — Nov 2016</div>
+        <div class="exp-location">Bangalore, India</div>
+      </div>
+      <div>
+        <div class="exp-company">British Telecom</div>
+        <div class="exp-role">Senior Software Engineer</div>
+        <ul class="exp-bullets">
+          <li>Built a centralised bandwidth capacity management portal — real-time regional visibility and automated, client-driven allocation from a single interface.</li>
+          <li>Consolidated fragmented capacity planning company-wide, eliminating manual bandwidth allocation and reducing provisioning time per client request.</li>
+        </ul>
+        <div class="exp-tags">
+          <span class="exp-tag">CI/CD</span>
+          <span class="exp-tag">Linux</span>
+          <span class="exp-tag">Automation</span>
+          <span class="exp-tag">Enterprise</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item">
+      <div>
+        <div class="exp-period">Aug 2013 — May 2016</div>
+        <div class="exp-location">Bangalore, India</div>
+      </div>
+      <div>
+        <div class="exp-company">Accenture (Cisco)</div>
+        <div class="exp-role">Software Engineer</div>
+        <ul class="exp-bullets">
+          <li>Modernised Cisco's legacy UI stack from jQuery/server-side rendering to Angular 1.0.</li>
+          <li>Built enterprise middleware using Java/J2EE, Spring, Struts 2.x, EJB, and Hibernate across multiple modules under agile SDLC.</li>
+        </ul>
+        <div class="exp-tags">
+          <span class="exp-tag">Java / J2EE</span>
+          <span class="exp-tag">Angular</span>
+          <span class="exp-tag">Spring</span>
+          <span class="exp-tag">Cisco</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section class="section">
+    <div class="section-label">Education</div>
+    <div class="edu-item">
+      <div><div class="edu-year">2017 — 2019</div></div>
+      <div>
+        <div class="edu-school-name">National University of Singapore (NUS)</div>
+        <div class="edu-rank">Global Rank #9 · NUS Overseas College (NOC) Scholar</div>
+        <div class="edu-degree">M.Sc Software Engineering</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div><div class="edu-year">2018</div></div>
+      <div>
+        <div class="edu-school-name">EPFL — Switzerland</div>
+        <div class="edu-rank">Europe's Top Technical University</div>
+        <div class="edu-degree">Management, Technology & Entrepreneurship</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div><div class="edu-year">2009 — 2013</div></div>
+      <div>
+        <div class="edu-school-name">JIIT — Noida, India</div>
+        <div class="edu-degree">B.Tech, Electronics & Communication Engineering</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATIONS -->
+  <section class="section">
+    <div class="section-label">Certifications</div>
+    <div class="certs-grid">
+      <div class="cert-card">
+        <div class="cert-name">Terraform Associate 003</div>
+        <div class="cert-issuer">HashiCorp</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-name">AWS Solutions Architect – Associate</div>
+        <div class="cert-issuer">Amazon Web Services</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-name">AWS Security Fundamentals</div>
+        <div class="cert-issuer">Amazon Web Services</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-name">Foundation of DevOps</div>
+        <div class="cert-issuer">ICAgile</div>
+      </div>
+      <div class="cert-card">
+        <div class="cert-name">Professional Scrum Developer I</div>
+        <div class="cert-issuer">Scrum.org</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section">
+    <div class="section-label">Core Skills</div>
+    <div class="skills-grid">
+      <div>
+        <div class="skill-group-name">Cloud & Infrastructure</div>
+        <div class="skill-tags">
+          <span class="skill-tag strong">Oracle Cloud</span>
+          <span class="skill-tag strong">AWS</span>
+          <span class="skill-tag strong">Terraform</span>
+          <span class="skill-tag">Azure</span>
+          <span class="skill-tag">CloudFormation</span>
+          <span class="skill-tag">Ansible</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-name">Containers & Orchestration</div>
+        <div class="skill-tags">
+          <span class="skill-tag strong">Kubernetes</span>
+          <span class="skill-tag strong">Helm</span>
+          <span class="skill-tag strong">ArgoCD</span>
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">GitOps</span>
+          <span class="skill-tag">Service Mesh (Istio)</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-name">CI/CD & DevSecOps</div>
+        <div class="skill-tags">
+          <span class="skill-tag strong">GitHub Actions</span>
+          <span class="skill-tag">Jenkins</span>
+          <span class="skill-tag">Azure DevOps</span>
+          <span class="skill-tag">Vault</span>
+          <span class="skill-tag">SonarQube</span>
+          <span class="skill-tag">DevSecOps</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-name">Languages & Scripting</div>
+        <div class="skill-tags">
+          <span class="skill-tag strong">Python</span>
+          <span class="skill-tag strong">Bash / Shell</span>
+          <span class="skill-tag">Go</span>
+          <span class="skill-tag">HCL</span>
+          <span class="skill-tag">Java</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-name">Observability</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Prometheus</span>
+          <span class="skill-tag">Grafana</span>
+          <span class="skill-tag">ELK Stack</span>
+          <span class="skill-tag">Datadog</span>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group-name">AI & Emerging</div>
+        <div class="skill-tags">
+          <span class="skill-tag strong">Agentic AI</span>
+          <span class="skill-tag strong">RAG</span>
+          <span class="skill-tag">LLMOps</span>
+          <span class="skill-tag">AI Observability</span>
+          <span class="skill-tag">AI Infra</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WRITING -->
+  <section class="section">
+    <div class="section-label">Writing</div>
+    <a href="terraform-test-part1.html" class="writing-item">
+      <div class="writing-left">
+        <span class="writing-tag">Terraform</span>
+        <span class="writing-title">Terraform Component Testing: Stop Shipping Broken Infrastructure (Part 1)</span>
+      </div>
+      <div class="writing-right">
+        <span class="writing-date">May 2026</span>
+        <span class="writing-platform">This site</span>
+      </div>
+    </a>
+    <a href="terraform-test-part2.html" class="writing-item">
+      <div class="writing-left">
+        <span class="writing-tag">AI · DevOps</span>
+        <span class="writing-title">Terraform Testing at Scale: CI/CD, Pitfalls & the AI Frontier (Part 2)</span>
+      </div>
+      <div class="writing-right">
+        <span class="writing-date">May 2026</span>
+        <span class="writing-platform">This site</span>
+      </div>
+    </a>
+    <a href="https://medium.com/@ritesh.nus/time-to-expand-multicloud-options-87686ce8f277" target="_blank" class="writing-item">
+      <div class="writing-left">
+        <span class="writing-tag">Cloud</span>
+        <span class="writing-title">Time to Expand Multicloud Options ↗</span>
+      </div>
+      <div class="writing-right">
+        <span class="writing-date">May 2026</span>
+        <span class="writing-platform">Medium</span>
+      </div>
+    </a>
+    <a href="https://medium.com/paloit/azure-devops-as-one-stop-shop-5d64901da54b" target="_blank" class="writing-item">
+      <div class="writing-left">
+        <span class="writing-tag">DevOps</span>
+        <span class="writing-title">Azure DevOps: Everything You Need To Orchestrate Your DevOps Toolchain ↗</span>
+      </div>
+      <div class="writing-right">
+        <span class="writing-date">Apr 2020</span>
+        <span class="writing-platform">Medium · PALO-IT</span>
+      </div>
+    </a>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section">
+    <div class="section-label">Find Me</div>
+    <div class="contact-links">
+      <a href="mailto:ritesh.nus@gmail.com" class="contact-link">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        ritesh.nus@gmail.com
+      </a>
+      <a href="https://linkedin.com/in/riteshagrahari" target="_blank" class="contact-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        linkedin/riteshagrahari
+      </a>
+      <a href="https://github.com/riteshnus" target="_blank" class="contact-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+        github/riteshnus
+      </a>
+      <a href="https://medium.com/@ritesh.nus" target="_blank" class="contact-link">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.54 12a6.8 6.8 0 01-6.77 6.82A6.8 6.8 0 010 12a6.8 6.8 0 016.77-6.82A6.8 6.8 0 0113.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
+        medium/@ritesh.nus
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-copy">© 2026 Ritesh Kumar Agrahari</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/riteshagrahari" target="_blank">LinkedIn</a>
+      <a href="https://github.com/riteshnus" target="_blank">GitHub</a>
+      <a href="https://medium.com/@ritesh.nus" target="_blank">Medium</a>
+    </div>
+  </div>
+</footer>
 
 </body>
 </html>
