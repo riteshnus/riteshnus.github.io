@@ -104,12 +104,92 @@
     .footer-links a { font-size: 13px; color: var(--lighter); transition: color 0.15s; }
     .footer-links a:hover { color: var(--muted); }
 
+    /* ── MOBILE ── */
     @media (max-width: 768px) {
-      .page-hero { grid-template-columns: 1fr; }
-      .photo-col { flex-direction: row; align-items: center; gap: 20px; }
-      .page-title { font-size: 28px; }
-      .exp-item, .edu-item { grid-template-columns: 1fr; gap: 6px; }
-      .writing-item { flex-direction: column; gap: 4px; }
+
+      /* Nav: hide subtitle, tighten links */
+      .nav-logo span { display: none; }
+      .nav-inner { padding: 0 16px; }
+      .nav-links { gap: 18px; }
+      .nav-links a { font-size: 13px; }
+
+      /* Page wrap */
+      .page-wrap { padding: 0 16px; }
+
+      /* Hero: photo on top, text below */
+      .page-hero {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        padding: 32px 0 36px;
+        gap: 28px;
+      }
+      .photo-col {
+        grid-row: 1;
+        flex-direction: row;
+        align-items: center;
+        gap: 18px;
+        justify-content: flex-start;
+      }
+      .photo-wrap { width: 80px; height: 80px; border-width: 2px; }
+      .photo-name { font-size: 13px; font-weight: 700; }
+      .photo-location { font-size: 11px; }
+      .resume-btn { font-size: 11px; padding: 6px 12px; }
+
+      /* Hero text */
+      .page-title { font-size: 26px; letter-spacing: -0.3px; }
+      .page-role { font-size: 14px; margin-bottom: 14px; }
+      .page-bio { font-size: 14px; line-height: 1.7; }
+
+      /* Sections */
+      .section { padding: 32px 0; }
+      .section-label { margin-bottom: 20px; }
+
+      /* Experience: stack left/right */
+      .exp-item {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 20px 0;
+      }
+      .exp-period { font-size: 11px; }
+      .exp-location { font-size: 11px; display: inline; margin-left: 6px; }
+      .exp-location::before { content: '·'; margin-right: 6px; }
+      .exp-company { font-size: 14px; margin-top: 8px; }
+      .exp-role { font-size: 12px; margin-bottom: 10px; }
+      .exp-bullets li { font-size: 13px; }
+
+      /* Education */
+      .edu-item { grid-template-columns: 1fr; gap: 4px; padding: 16px 0; }
+      .edu-school-name { font-size: 14px; margin-top: 6px; }
+      .edu-degree { font-size: 13px; }
+
+      /* Certs */
+      .certs-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .cert-name { font-size: 12px; }
+      .cert-issuer { font-size: 11px; }
+
+      /* Skills */
+      .skills-grid { grid-template-columns: 1fr; gap: 18px; }
+
+      /* Writing */
+      .writing-item { flex-direction: column; gap: 4px; align-items: flex-start; }
+      .writing-right { gap: 8px; }
+      .writing-title { font-size: 13px; }
+
+      /* Contact */
+      .contact-links { gap: 8px; }
+      .contact-link { font-size: 13px; padding: 8px 14px; }
+
+      /* Footer */
+      .footer-inner { flex-direction: column; gap: 12px; align-items: flex-start; }
+      .footer-links { gap: 14px; }
+    }
+
+    /* Very small phones */
+    @media (max-width: 380px) {
+      .nav-logo { font-size: 13px; }
+      .nav-links { gap: 12px; }
+      .certs-grid { grid-template-columns: 1fr; }
+      .page-title { font-size: 22px; }
     }
   </style>
 </head>

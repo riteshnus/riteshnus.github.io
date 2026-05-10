@@ -116,12 +116,68 @@
     .footer-links a:hover { color: rgba(255,255,255,0.8); }
 
     @media (max-width: 768px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-name { font-size: 30px; }
+
+      /* Nav */
+      .nav-logo span { display: none; }
+      .nav-inner { padding: 0 16px; }
+      .nav-links { gap: 16px; }
+      .nav-links a { font-size: 13px; }
+
+      /* Page wrap */
+      .page-wrap { padding: 0 16px; }
+
+      /* Hero: single column, tighter */
+      .hero { grid-template-columns: 1fr; padding: 32px 0 36px; gap: 28px; }
+      .hero-name { font-size: 26px; letter-spacing: -0.3px; margin-bottom: 12px; }
+      .hero-eyebrow { font-size: 11px; margin-bottom: 10px; }
+      .hero-desc { font-size: 15px; margin-bottom: 16px; }
+
+      /* Skill pills: wrap tightly */
+      .hero-pills { gap: 6px; margin-bottom: 20px; }
+      .hero-pill { font-size: 11px; padding: 4px 10px; }
+
+      /* Hero links */
+      .hero-links { gap: 8px; flex-wrap: wrap; }
+      .hero-link { font-size: 12px; padding: 8px 14px; }
+
+      /* Hero card: tighter */
+      .hero-card { padding: 18px 20px; }
+      .hc-label { font-size: 10px; margin-bottom: 12px; }
+      .hc-item { padding: 10px 0; }
+      .hc-role { font-size: 13px; }
+      .hc-co { font-size: 12px; }
+      .hc-period { font-size: 11px; }
+
+      /* Section header */
+      .section-header { padding: 32px 0 18px; }
+
+      /* Series: stack to single column */
       .series-arts { grid-template-columns: 1fr; }
       .s-art:first-child { border-right: none; border-bottom: 1px solid var(--teal-border); }
+      .s-art { padding: 18px 20px; }
+      .s-title { font-size: 15px; }
+      .s-excerpt { font-size: 13px; }
+
+      /* Article cards: single column */
       .cards-grid { grid-template-columns: 1fr; }
-      .about-teaser { grid-template-columns: 1fr; padding: 28px 24px; }
+      .art-card { padding: 20px 20px; }
+      .card-title { font-size: 16px; }
+      .card-excerpt { font-size: 13px; margin-bottom: 14px; }
+
+      /* About teaser */
+      .about-teaser { grid-template-columns: 1fr; padding: 24px 20px; margin: 32px 0 48px; gap: 20px; }
+      .at-title { font-size: 18px; }
+      .at-desc { font-size: 13px; }
+      .at-btn { padding: 11px 20px; font-size: 13px; }
+
+      /* Footer */
+      .footer-inner { flex-direction: column; gap: 10px; align-items: flex-start; padding: 0 16px; }
+    }
+
+    @media (max-width: 380px) {
+      .hero-name { font-size: 22px; }
+      .nav-logo { font-size: 13px; }
+      .nav-links { gap: 10px; }
     }
   </style>
 </head>
