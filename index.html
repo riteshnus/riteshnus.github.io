@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ritesh Kumar Agrahari — Platform Engineer & Technical Writer</title>
+  <meta name="description" content="Writing about Platform Engineering, Terraform, DevOps, Kubernetes, and AI in Infrastructure. Senior Platform Engineer based in Bangalore.">
+  <meta property="og:title" content="Ritesh Kumar Agrahari">
+  <meta property="og:description" content="Writing about Terraform, DevOps, and AI in Infrastructure.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg-soft: #f9fafb;
+      --text: #111827;
+      --muted: #6b7280;
+      --lighter: #9ca3af;
+      --accent: #1d4ed8;
+      --accent-bg: #eff6ff;
+      --border: #e5e7eb;
+      --border-hover: #d1d5db;
+      --series: #0f766e;
+      --series-bg: #f0fdf9;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 24px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 15px; font-weight: 600; color: var(--text);
+      letter-spacing: -0.2px;
+    }
+    .nav-logo span { color: var(--muted); font-weight: 400; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-links a {
+      font-size: 14px; font-weight: 500; color: var(--muted);
+      transition: color 0.15s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a.active {
+      color: var(--text);
+      border-bottom: 1.5px solid var(--text);
+      padding-bottom: 2px;
+    }
+
+    /* ── LAYOUT ── */
+    .page-wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 72px 0 56px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
+    }
+    .hero-text {}
+    .hero-eyebrow {
+      font-size: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--accent); margin-bottom: 16px;
+    }
+    .hero-name {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 42px; font-weight: 600;
+      line-height: 1.15; letter-spacing: -0.5px;
+      color: var(--text); margin-bottom: 16px;
+    }
+    .hero-desc {
+      font-size: 17px; color: var(--muted);
+      line-height: 1.7; max-width: 540px;
+      margin-bottom: 24px;
+    }
+    .hero-meta {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .hero-meta-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--lighter);
+    }
+    .hero-meta-item svg { width: 14px; height: 14px; opacity: 0.6; }
+    .hero-links { display: flex; align-items: center; gap: 12px; margin-top: 28px; }
+    .hero-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 500;
+      color: var(--muted); border: 1px solid var(--border);
+      padding: 7px 14px; border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .hero-link:hover { color: var(--text); border-color: var(--border-hover); background: var(--bg-soft); }
+    .hero-link svg { width: 14px; height: 14px; }
+
+    .hero-badge {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+    }
+    .badge-current {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      text-align: right;
+    }
+    .badge-current .badge-label {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--lighter); margin-bottom: 4px;
+    }
+    .badge-current .badge-role {
+      font-size: 13px; font-weight: 600; color: var(--text);
+    }
+    .badge-current .badge-company {
+      font-size: 12px; color: var(--muted); margin-top: 2px;
+    }
+    .badge-exp {
+      font-size: 12px; color: var(--lighter);
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-header {
+      display: flex; align-items: baseline;
+      justify-content: space-between;
+      padding: 52px 0 28px;
+    }
+    .section-label {
+      font-size: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--lighter);
+    }
+    .section-count {
+      font-size: 12px; color: var(--lighter);
+    }
+
+    /* ── SERIES BLOCK ── */
+    .series-block {
+      border: 1px solid #ccfbf1;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      background: var(--series-bg);
+    }
+    .series-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 20px;
+      border-bottom: 1px solid #ccfbf1;
+      background: #ecfdf5;
+    }
+    .series-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.2px;
+      color: var(--series);
+    }
+    .series-name {
+      font-size: 12px; color: #0f766e; font-weight: 500;
+    }
+    .series-dot { width: 3px; height: 3px; border-radius: 50%; background: #99f6e4; }
+    .series-articles { display: grid; grid-template-columns: 1fr 1fr; }
+    .series-article {
+      padding: 20px 24px;
+      transition: background 0.15s;
+      cursor: pointer;
+      display: block;
+    }
+    .series-article:first-child { border-right: 1px solid #ccfbf1; }
+    .series-article:hover { background: #d1fae5; }
+    .series-part {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: #0f766e; margin-bottom: 6px;
+    }
+    .series-title {
+      font-size: 15px; font-weight: 600; color: var(--text);
+      line-height: 1.4; margin-bottom: 6px;
+    }
+    .series-excerpt {
+      font-size: 13px; color: var(--muted); line-height: 1.5;
+      margin-bottom: 10px;
+    }
+    .series-meta {
+      font-size: 12px; color: var(--lighter);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .series-meta span { display: flex; align-items: center; gap: 3px; }
+    .new-badge {
+      display: inline-block;
+      background: #dcfce7; color: #15803d;
+      font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    /* ── ARTICLE CARDS ── */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--border);
+      margin-bottom: 20px;
+    }
+    .article-card {
+      background: var(--bg);
+      padding: 28px 28px;
+      display: flex; flex-direction: column;
+      transition: background 0.15s;
+      cursor: pointer;
+      display: block;
+    }
+    .article-card:hover { background: var(--bg-soft); }
+    .card-top {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .card-tag {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: var(--accent);
+      background: var(--accent-bg);
+      padding: 3px 9px; border-radius: 20px;
+    }
+    .external-icon {
+      width: 14px; height: 14px; color: var(--lighter);
+      flex-shrink: 0;
+    }
+    .card-title {
+      font-family: 'Lora', Georgia, serif;
+      font-size: 18px; font-weight: 600;
+      color: var(--text); line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .card-excerpt {
+      font-size: 14px; color: var(--muted);
+      line-height: 1.6; flex: 1; margin-bottom: 20px;
+    }
+    .card-footer {
+      display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .card-date { font-size: 12px; color: var(--lighter); }
+    .card-read {
+      font-size: 12px; color: var(--lighter);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .card-platform {
+      font-size: 11px; font-weight: 500;
+      color: var(--lighter);
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      padding: 2px 8px; border-radius: 4px;
+    }
+
+    /* ── ABOUT TEASER ── */
+    .about-teaser {
+      margin: 52px 0 64px;
+      padding: 36px 40px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      align-items: center;
+    }
+    .teaser-left {}
+    .teaser-eyebrow {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--lighter); margin-bottom: 10px;
+    }
+    .teaser-title {
+      font-size: 20px; font-weight: 600; color: var(--text);
+      margin-bottom: 10px; line-height: 1.4;
+    }
+    .teaser-desc {
+      font-size: 14px; color: var(--muted); line-height: 1.7;
+      max-width: 480px;
+    }
+    .teaser-companies {
+      display: flex; align-items: center; gap: 10px;
+      flex-wrap: wrap; margin-top: 16px;
+    }
+    .teaser-co {
+      font-size: 12px; font-weight: 500;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 10px; border-radius: 6px;
+      background: var(--bg-soft);
+    }
+    .teaser-right {}
+    .view-profile-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600;
+      color: var(--text);
+      border: 1.5px solid var(--text);
+      padding: 12px 22px; border-radius: 8px;
+      transition: all 0.15s; white-space: nowrap;
+    }
+    .view-profile-btn:hover {
+      background: var(--text); color: var(--bg);
+    }
+    .view-profile-btn svg { width: 14px; height: 14px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .footer-copy { font-size: 13px; color: var(--lighter); }
+    .footer-links { display: flex; align-items: center; gap: 20px; }
+    .footer-links a {
+      font-size: 13px; color: var(--lighter);
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--muted); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-badge { align-items: flex-start; }
+      .hero-name { font-size: 30px; }
+      .series-articles { grid-template-columns: 1fr; }
+      .series-article:first-child { border-right: none; border-bottom: 1px solid #ccfbf1; }
+      .articles-grid { grid-template-columns: 1fr; }
+      .about-teaser { grid-template-columns: 1fr; }
+      .teaser-right { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Ritesh Kumar Agrahari <span>· Platform Engineer</span></a>
+      <div class="nav-links">
+        <a href="index.html" class="active">Blog</a>
+        <a href="about.html">About</a>
+        <a href="https://linkedin.com/in/ritesh-kumar-agrahari" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrap">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-text">
+        <div class="hero-eyebrow">Technical Writing · Platform Engineering</div>
+        <h1 class="hero-name">Writing about the real<br>problems of building<br>infrastructure at scale.</h1>
+        <p class="hero-desc">Terraform, DevOps, Kubernetes, AI in Infrastructure — from patterns that work in production to honest lessons from things that didn't.</p>
+        <div class="hero-meta">
+          <span class="hero-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Bangalore, India
+          </span>
+          <span class="hero-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            11+ years in Cloud & DevOps
+          </span>
+        </div>
+        <div class="hero-links">
+          <a href="https://linkedin.com/in/ritesh-kumar-agrahari" target="_blank" class="hero-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/ritesh-agrahari" target="_blank" class="hero-link">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+            GitHub
+          </a>
+          <a href="about.html#resume" class="hero-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Resume
+          </a>
+        </div>
+      </div>
+      <div class="hero-badge">
+        <div class="badge-current">
+          <div class="badge-label">Currently at</div>
+          <div class="badge-role">Senior Member of Technical Staff</div>
+          <div class="badge-company">Oracle · AI Data Platform</div>
+        </div>
+        <div class="badge-exp">11+ years · Cloud · DevOps · Platform</div>
+      </div>
+    </section>
+
+    <!-- WRITING SECTION -->
+    <div class="section-header">
+      <span class="section-label">Writing</span>
+      <span class="section-count">4 articles</span>
+    </div>
+
+    <!-- SERIES: Terraform Testing -->
+    <div class="series-block">
+      <div class="series-header">
+        <span class="series-label">Series</span>
+        <span class="series-dot"></span>
+        <span class="series-name">Terraform Component Testing — 2 Parts</span>
+        <span class="new-badge" style="margin-left:auto;">New</span>
+      </div>
+      <div class="series-articles">
+        <a href="terraform-testing-part1.html" class="series-article">
+          <div class="series-part">Part 1 of 2</div>
+          <div class="series-title">Stop Shipping Broken Infrastructure</div>
+          <div class="series-excerpt">The IaC testing pyramid, what component testing actually means, and two complete working examples using terraform test and Terratest.</div>
+          <div class="series-meta">
+            <span>May 2026</span>
+            <span>·</span>
+            <span>8 min read</span>
+            <span>·</span>
+            <span>Terraform · DevOps</span>
+          </div>
+        </a>
+        <a href="terraform-testing-part2.html" class="series-article">
+          <div class="series-part">Part 2 of 2</div>
+          <div class="series-title">CI/CD, Pitfalls & the AI Frontier</div>
+          <div class="series-excerpt">Pipeline architecture, what's worth testing, five common pitfalls, and how AI agents and RAG are changing how teams build and maintain test suites.</div>
+          <div class="series-meta">
+            <span>May 2026</span>
+            <span>·</span>
+            <span>10 min read</span>
+            <span>·</span>
+            <span>AI · Platform Engineering</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- INDIVIDUAL ARTICLES: Medium -->
+    <div class="articles-grid">
+      <a href="https://medium.com/@ritesh.nus/time-to-expand-multicloud-options-87686ce8f277" target="_blank" rel="noopener" class="article-card">
+        <div class="card-top">
+          <span class="card-tag">Cloud</span>
+          <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </div>
+        <div class="card-title">Time to Expand Multicloud Options</div>
+        <div class="card-excerpt">What multicloud actually means, how it differs from hybrid cloud, real business use cases, and why the tools have finally caught up to the strategy.</div>
+        <div class="card-footer">
+          <span class="card-date">May 2026</span>
+          <span class="card-platform">Medium</span>
+        </div>
+      </a>
+
+      <a href="https://medium.com/paloit/azure-devops-as-one-stop-shop-5d64901da54b" target="_blank" rel="noopener" class="article-card">
+        <div class="card-top">
+          <span class="card-tag">DevOps</span>
+          <svg class="external-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </div>
+        <div class="card-title">Azure DevOps: Everything You Need To Orchestrate Your DevOps Toolchain</div>
+        <div class="card-excerpt">A deep dive into all five Azure DevOps services — Boards, Repos, Pipelines, Test Plans, and Artifacts — and why it remains one of the most complete DevOps platforms available.</div>
+        <div class="card-footer">
+          <span class="card-date">Apr 2020</span>
+          <span class="card-platform">Medium · PALO-IT</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- ABOUT TEASER -->
+    <div class="about-teaser">
+      <div class="teaser-left">
+        <div class="teaser-eyebrow">About</div>
+        <div class="teaser-title">11+ years building cloud infrastructure across four countries.</div>
+        <div class="teaser-desc">From consulting at PALO-IT Singapore to being the first technical hire at a Swiss deep-tech startup, to enterprise DevOps at British Telecom, to building AI data platforms at Oracle.</div>
+        <div class="teaser-companies">
+          <span class="teaser-co">Oracle</span>
+          <span class="teaser-co">PALO-IT</span>
+          <span class="teaser-co">AELER Technologies</span>
+          <span class="teaser-co">British Telecom</span>
+          <span class="teaser-co">Accenture</span>
+        </div>
+      </div>
+      <div class="teaser-right">
+        <a href="about.html" class="view-profile-btn">
+          View Profile
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-copy">© 2026 Ritesh Kumar Agrahari</span>
+      <div class="footer-links">
+        <a href="https://linkedin.com/in/ritesh-kumar-agrahari" target="_blank">LinkedIn</a>
+        <a href="https://github.com/ritesh-agrahari" target="_blank">GitHub</a>
+        <a href="https://medium.com/@ritesh.nus" target="_blank">Medium</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
