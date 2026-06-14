@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Semantic RAG vs Graph RAG: Choosing the Right Architecture — Ritesh Kumar Agrahari</title>
+  <meta name="description" content="Semantic RAG vs Graph RAG explained with real-world examples, a head-to-head comparison, and a decision guide on when to use which — including Hybrid RAG.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --text: #1a1a1a; --muted: #6b7280; --border: #e8e8e8;
+      --bg: #ffffff; --bg-soft: #f9fafb;
+      --accent: #1d4ed8; --accent-bg: #eff6ff;
+      --code-bg: #f8f7f4; --code-border: #e4e2db;
+      --highlight: #fff9e6;
+      --sem-color: #2563eb; --sem-bg: #eff6ff; --sem-border: #bfdbfe;
+      --graph-color: #7c3aed; --graph-bg: #f5f3ff; --graph-border: #ddd6fe;
+      --hybrid-color: #0d9488; --hybrid-bg: #f0fdf9; --hybrid-border: #99f6e4;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Source Serif 4', Georgia, serif; background: var(--bg); color: var(--text); font-size: 20px; line-height: 1.85; -webkit-font-smoothing: antialiased; }
+    a { text-decoration: none; color: var(--accent); }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(10,22,40,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .nav-inner { max-width: 728px; margin: 0 auto; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-home { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); font-family: -apple-system, sans-serif; transition: color 0.15s; }
+    .nav-home:hover { color: #fff; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { font-size: 13px; color: rgba(255,255,255,0.45); font-family: -apple-system, sans-serif; font-weight: 500; transition: color 0.15s; }
+    .nav-links a:hover { color: rgba(255,255,255,0.8); }
+
+    /* CONTAINER */
+    .container { max-width: 728px; margin: 0 auto; padding: 0 24px; }
+
+    /* HERO */
+    .article-header { padding: 56px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 44px; }
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .tag { font-family: -apple-system, sans-serif; font-size: 12px; background: var(--bg-soft); color: var(--muted); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); }
+    h1 { font-family: 'Lora', Georgia, serif; font-size: 40px; font-weight: 600; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 16px; }
+    .subtitle { font-size: 21px; color: var(--muted); font-style: italic; line-height: 1.5; margin-bottom: 28px; }
+    .author-row { display: flex; align-items: center; gap: 14px; }
+    .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1a5276, #2e86c1); display: flex; align-items: center; justify-content: center; font-family: -apple-system, sans-serif; font-weight: 700; color: white; font-size: 14px; flex-shrink: 0; }
+    .author-info { font-family: -apple-system, sans-serif; }
+    .author-name { font-size: 14px; font-weight: 600; }
+    .author-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    /* BODY */
+    .article-body p { margin-bottom: 26px; }
+    h2 { font-family: 'Lora', Georgia, serif; font-size: 28px; font-weight: 600; margin: 52px 0 16px; line-height: 1.3; }
+    h3 { font-family: 'Lora', Georgia, serif; font-size: 22px; font-weight: 600; margin: 36px 0 12px; }
+    blockquote { border-left: 3px solid var(--text); padding: 4px 0 4px 22px; margin: 32px 0; color: var(--muted); font-style: italic; font-size: 21px; line-height: 1.6; }
+
+    .callout { background: var(--highlight); border-left: 4px solid #f0c040; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 28px 0; font-size: 16px; line-height: 1.7; }
+    .callout strong { display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #7a6200; font-family: -apple-system, sans-serif; }
+
+    ul, ol { padding-left: 0; margin-bottom: 24px; list-style: none; }
+    ul li, ol li { padding: 5px 0 5px 26px; position: relative; font-size: 19px; line-height: 1.7; }
+    ul li::before { content: '—'; position: absolute; left: 0; color: var(--muted); }
+    ol { counter-reset: li; }
+    ol li { counter-increment: li; }
+    ol li::before { content: counter(li)'.'; position: absolute; left: 0; font-weight: 600; font-family: -apple-system, sans-serif; font-size: 15px; }
+
+    code { font-family: 'SFMono-Regular', Consolas, Menlo, monospace; font-size: 15px; background: var(--code-bg); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--code-border); }
+
+    .divider { text-align: center; margin: 44px 0; color: var(--muted); letter-spacing: 8px; font-size: 14px; }
+
+    /* TYPE CARDS */
+    .type-card { border-radius: 14px; padding: 28px 30px; margin: 32px 0; }
+    .type-card.semantic { background: var(--sem-bg); border: 1px solid var(--sem-border); }
+    .type-card.graph { background: var(--graph-bg); border: 1px solid var(--graph-border); }
+    .type-card.hybrid { background: var(--hybrid-bg); border: 1px solid var(--hybrid-border); }
+    .type-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .type-icon { font-size: 28px; }
+    .type-title { font-family: -apple-system, sans-serif; font-size: 16px; font-weight: 700; }
+    .type-title.semantic { color: var(--sem-color); }
+    .type-title.graph { color: var(--graph-color); }
+    .type-title.hybrid { color: var(--hybrid-color); }
+    .type-tagline { font-size: 13px; font-weight: 500; margin-top: 1px; }
+    .type-tagline.semantic { color: var(--sem-color); opacity: 0.7; }
+    .type-tagline.graph { color: var(--graph-color); opacity: 0.7; }
+    .type-tagline.hybrid { color: var(--hybrid-color); opacity: 0.7; }
+    .type-body { font-size: 16px; line-height: 1.75; color: var(--text); margin-bottom: 16px; font-family: 'Source Serif 4', Georgia, serif; }
+    .type-pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .pros h4, .cons h4 { font-family: -apple-system, sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .pros h4 { color: #16a34a; }
+    .cons h4 { color: #dc2626; }
+    .pros ul li, .cons ul li { font-size: 13px; font-family: -apple-system, sans-serif; color: var(--muted); }
+    .pros ul li::before { color: #16a34a; content: '✓'; }
+    .cons ul li::before { color: #dc2626; content: '✗'; }
+    .type-tools { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .tool-tag { font-family: -apple-system, sans-serif; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+    .tool-tag.semantic { background: rgba(37,99,235,0.1); color: var(--sem-color); border: 1px solid var(--sem-border); }
+    .tool-tag.graph { background: rgba(124,58,237,0.1); color: var(--graph-color); border: 1px solid var(--graph-border); }
+    .tool-tag.hybrid { background: rgba(13,148,136,0.1); color: var(--hybrid-color); border: 1px solid var(--hybrid-border); }
+
+    /* COMPARISON TABLE */
+    .compare-wrap { overflow-x: auto; margin: 36px 0; border-radius: 12px; border: 1px solid var(--border); }
+    .compare-table { width: 100%; border-collapse: collapse; font-family: -apple-system, sans-serif; font-size: 14px; }
+    .compare-table th { padding: 13px 16px; text-align: left; font-weight: 700; font-size: 12px; border-bottom: 1px solid var(--border); }
+    .compare-table th:nth-child(1) { background: var(--bg-soft); color: var(--muted); width: 28%; }
+    .compare-table th:nth-child(2) { background: var(--sem-bg); color: var(--sem-color); }
+    .compare-table th:nth-child(3) { background: var(--graph-bg); color: var(--graph-color); }
+    .compare-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; color: var(--text); }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:nth-child(even) td { background: #fafafa; }
+    .compare-table td:first-child { font-weight: 600; color: var(--muted); background: var(--bg-soft) !important; font-size: 13px; }
+    .win { font-weight: 600; }
+    .win.s { color: var(--sem-color); }
+    .win.g { color: var(--graph-color); }
+
+    /* DECISION GUIDE */
+    .decision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 28px 0; }
+    .decision-card { border-radius: 10px; padding: 18px 20px; }
+    .decision-card.use-semantic { background: var(--sem-bg); border: 1px solid var(--sem-border); }
+    .decision-card.use-graph { background: var(--graph-bg); border: 1px solid var(--graph-border); }
+    .decision-card.use-hybrid { background: var(--hybrid-bg); border: 1px solid var(--hybrid-border); grid-column: 1 / -1; }
+    .decision-label { font-family: -apple-system, sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 8px; }
+    .decision-label.s { color: var(--sem-color); }
+    .decision-label.g { color: var(--graph-color); }
+    .decision-label.h { color: var(--hybrid-color); }
+    .decision-scenarios { list-style: none; }
+    .decision-scenarios li { font-family: -apple-system, sans-serif; font-size: 13px; color: var(--text); padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+    .decision-scenarios li:last-child { border-bottom: none; }
+    .decision-scenarios li::before { display: none; }
+
+    /* FOOTER */
+    .article-footer { border-top: 1px solid var(--border); padding: 40px 0; margin-top: 56px; }
+    .next-teaser { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 22px 26px; margin-top: 28px; font-family: -apple-system, sans-serif; }
+    .next-teaser .label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); display: block; margin-bottom: 6px; }
+    .next-teaser strong { font-size: 15px; display: block; margin-bottom: 3px; }
+    .next-teaser p { font-size: 13px; color: var(--muted); margin: 0; }
+    .footer-nav { border-top: 1px solid rgba(255,255,255,0.08); background: #0a1628; padding: 20px 0; margin-top: 0; }
+    .footer-nav-inner { max-width: 728px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); font-family: -apple-system, sans-serif; }
+    .footer-flinks { display: flex; gap: 18px; }
+    .footer-flinks a { font-size: 12px; color: rgba(255,255,255,0.4); font-family: -apple-system, sans-serif; transition: color 0.15s; }
+    .footer-flinks a:hover { color: rgba(255,255,255,0.8); }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 28px; }
+      h2 { font-size: 23px; }
+      body { font-size: 18px; }
+      .container { padding: 0 16px; }
+      .type-pros-cons { grid-template-columns: 1fr; }
+      .decision-grid { grid-template-columns: 1fr; }
+      .decision-card.use-hybrid { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-home">Home</a>
+    <div class="nav-links">
+      <a href="/blog">Blog</a>
+      <a href="/about">About</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="article-header">
+    <div class="tags">
+      <span class="tag">AI</span>
+      <span class="tag">RAG</span>
+      <span class="tag">LLM</span>
+      <span class="tag">Platform Engineering</span>
+      <span class="tag">Architecture</span>
+    </div>
+    <h1>Semantic RAG vs Graph RAG: Choosing the Right Architecture for Your AI System</h1>
+    <p class="subtitle">Two retrieval strategies, completely different mental models — and a third option that combines the best of both.</p>
+    <div class="author-row">
+      <div class="avatar">RK</div>
+      <div class="author-info">
+        <div class="author-name">Ritesh Kumar Agrahari</div>
+        <div class="author-meta">Senior Platform Engineer · 9 min read · June 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <article class="article-body">
+
+    <p>A platform engineering team I was working with decided to build an internal AI assistant. The goal was practical — let engineers query runbooks, incident post-mortems, architecture docs, and service dependency maps without digging through Confluence. They stood up a standard RAG pipeline in about two weeks. Vector embeddings, similarity search, feed results into an LLM. First round of demos looked brilliant.</p>
+
+    <p>Then someone asked: <em>"If the authentication service goes down, what breaks downstream and in what order?"</em></p>
+
+    <p>The system returned three paragraphs about authentication failure scenarios. Accurate text — but completely wrong answer. It had no idea what "depends on" meant in a structural sense. It found similar words, not similar relationships.</p>
+
+    <p>That was the moment I started properly understanding the difference between Semantic RAG and Graph RAG — and why picking the wrong one for the wrong use case produces exactly that kind of failure.</p>
+
+    <h2>What is RAG, Quickly?</h2>
+
+    <p>Retrieval-Augmented Generation (RAG) is the pattern of giving an LLM access to external knowledge at query time, rather than baking everything into the model's weights. Instead of asking the LLM to know everything, you retrieve the relevant context and hand it over. The LLM answers based on what you just gave it.</p>
+
+    <p>The retrieval part is where Semantic RAG and Graph RAG diverge completely — and understanding that difference is what this article is about.</p>
+
+    <div class="divider">· · ·</div>
+
+    <h2>Semantic RAG — Retrieval by Meaning</h2>
+
+    <div class="type-card semantic">
+      <div class="type-card-header">
+        <span class="type-icon">🔵</span>
+        <div>
+          <div class="type-title semantic">Semantic RAG</div>
+          <div class="type-tagline semantic">Also called Vector RAG or Dense Retrieval</div>
+        </div>
+      </div>
+      <div class="type-body">Converts documents and queries into numerical vectors (embeddings) that capture meaning. At query time, it finds the top-k chunks whose vectors are closest to the query vector — meaning the most semantically similar text — and hands those to the LLM as context.</div>
+      <div class="type-pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>Fast to build and ship</li>
+            <li>Works on any text corpus</li>
+            <li>Handles synonyms and paraphrasing naturally</li>
+            <li>Great for fuzzy, open-ended questions</li>
+            <li>Low infrastructure overhead</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Limitations</h4>
+          <ul>
+            <li>No understanding of relationships</li>
+            <li>Fails on multi-hop questions</li>
+            <li>Black box — hard to audit why something was retrieved</li>
+            <li>Chunks lose connection to each other</li>
+            <li>Hallucination risk on relational queries</li>
+          </ul>
+        </div>
+      </div>
+      <div class="type-tools">
+        <span class="tool-tag semantic">Pinecone</span>
+        <span class="tool-tag semantic">Chroma</span>
+        <span class="tool-tag semantic">pgvector</span>
+        <span class="tool-tag semantic">Weaviate</span>
+        <span class="tool-tag semantic">OpenSearch</span>
+        <span class="tool-tag semantic">LangChain</span>
+      </div>
+    </div>
+
+    <p>Think of Semantic RAG like a very fast, very smart librarian who has read every book and can instantly find the three books most relevant to your question. But ask that librarian "which of these authors influenced each other?" and they are going to struggle — they know what each book says, but not how the ideas connect across them.</p>
+
+    <p><em>For example</em>, ask a Semantic RAG system "What is our incident response process?" and it will retrieve your runbook perfectly. Ask it "If the authentication service fails, what is the cascade order of failures across our microservices?" and it will likely retrieve text that mentions authentication failures — but have no idea about the dependency graph underneath.</p>
+
+    <div class="callout">
+      <strong>💡 The core idea</strong>
+      Semantic RAG answers "what text is similar to my question?" — it retrieves by proximity of meaning, not by understanding the structure of the data.
+    </div>
+
+    <div class="divider">· · ·</div>
+
+    <h2>Graph RAG — Retrieval by Relationships</h2>
+
+    <div class="type-card graph">
+      <div class="type-card-header">
+        <span class="type-icon">🟣</span>
+        <div>
+          <div class="type-title graph">Graph RAG</div>
+          <div class="type-tagline graph">Also called Knowledge Graph RAG or GraphRAG</div>
+        </div>
+      </div>
+      <div class="type-body">Builds a knowledge graph from your documents — extracting entities (people, services, products, concepts) and the relationships between them (depends on, owns, causes, triggers). At query time, it finds entry points in the graph and traverses relationships across multiple hops to assemble a structured, connected answer.</div>
+      <div class="type-pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>Multi-hop reasoning across entities</li>
+            <li>Explainable — the retrieval path is visible</li>
+            <li>Low hallucination on relational queries</li>
+            <li>Perfect for regulated / auditable AI</li>
+            <li>Handles complex analytical questions</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Limitations</h4>
+          <ul>
+            <li>Expensive and slow to build the graph</li>
+            <li>Requires structured or semi-structured data</li>
+            <li>Entity extraction is imperfect</li>
+            <li>Higher infrastructure complexity</li>
+            <li>Overkill for simple Q&amp;A use cases</li>
+          </ul>
+        </div>
+      </div>
+      <div class="type-tools">
+        <span class="tool-tag graph">Neo4j</span>
+        <span class="tool-tag graph">Memgraph</span>
+        <span class="tool-tag graph">Microsoft GraphRAG</span>
+        <span class="tool-tag graph">Amazon Neptune</span>
+        <span class="tool-tag graph">LlamaIndex</span>
+      </div>
+    </div>
+
+    <p>Think of Graph RAG like a detective board — the kind you see in crime dramas with red strings connecting photos, documents, and names. Ask it about a person, and it does not just tell you who that person is. It traces every connection: who they work with, what they own, what events they are linked to, and where those events lead.</p>
+
+    <p><em>For example</em>, Microsoft used Graph RAG on the Violent Incident Information from News Articles (VIINA) dataset. When asked a complex question requiring connecting information across hundreds of documents, standard Semantic RAG returned unrelated text. Graph RAG traced relationships across the corpus and returned a coherent, structured answer. The retrieval path was completely different.</p>
+
+    <blockquote>"Graph RAG does not just find what is similar. It finds what is connected."</blockquote>
+
+    <div class="callout">
+      <strong>💡 The core idea</strong>
+      Graph RAG answers "how are things related to my question?" — it retrieves by traversing structured relationships, not by measuring text similarity.
+    </div>
+
+    <div class="divider">· · ·</div>
+
+    <h2>Head-to-Head Comparison</h2>
+
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Criteria</th>
+            <th>🔵 Semantic RAG</th>
+            <th>🟣 Graph RAG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>How it retrieves</td>
+            <td>Vector similarity — closest meaning to the query</td>
+            <td>Graph traversal — follows entity relationships</td>
+          </tr>
+          <tr>
+            <td>Data requirement</td>
+            <td>Any unstructured text</td>
+            <td>Structured knowledge graph (built from text)</td>
+          </tr>
+          <tr>
+            <td>Multi-hop questions</td>
+            <td class="win s">Struggles</td>
+            <td class="win g">Excellent</td>
+          </tr>
+          <tr>
+            <td>Simple Q&amp;A</td>
+            <td class="win s">Excellent</td>
+            <td>Overkill</td>
+          </tr>
+          <tr>
+            <td>Setup complexity</td>
+            <td class="win s">Low</td>
+            <td>High</td>
+          </tr>
+          <tr>
+            <td>Explainability</td>
+            <td>Low (black box)</td>
+            <td class="win g">High (traceable path)</td>
+          </tr>
+          <tr>
+            <td>Hallucination risk</td>
+            <td>Medium–High on relational queries</td>
+            <td class="win g">Low (grounded in graph)</td>
+          </tr>
+          <tr>
+            <td>Best for</td>
+            <td>Document Q&amp;A, chatbots, search</td>
+            <td>Compliance, dependency analysis, research</td>
+          </tr>
+          <tr>
+            <td>Time to first result</td>
+            <td class="win s">Days to weeks</td>
+            <td>Weeks to months</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="divider">· · ·</div>
+
+    <h2>Hybrid RAG — Best of Both Worlds</h2>
+
+    <div class="type-card hybrid">
+      <div class="type-card-header">
+        <span class="type-icon">🟢</span>
+        <div>
+          <div class="type-title hybrid">Hybrid RAG</div>
+          <div class="type-tagline hybrid">Semantic discovery + Graph reasoning in one pipeline</div>
+        </div>
+      </div>
+      <div class="type-body">Uses an orchestration layer that routes each query through both retrieval systems and combines their outputs. Vector search provides broad semantic discovery — finding potentially relevant content even when terminology is vague or approximate. The knowledge graph then grounds and enriches those findings with structured relational context. The LLM receives both: the relevant text chunks and the verified relationship paths.</div>
+      <div class="type-pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>Handles both simple and complex queries</li>
+            <li>Semantic coverage + relational precision</li>
+            <li>Lower hallucination than pure vector</li>
+            <li>More explainable than pure vector</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Limitations</h4>
+          <ul>
+            <li>Highest infrastructure complexity</li>
+            <li>Latency overhead from two retrieval paths</li>
+            <li>Requires both a vector DB and a graph DB</li>
+            <li>Harder to debug when answers go wrong</li>
+          </ul>
+        </div>
+      </div>
+      <div class="type-tools">
+        <span class="tool-tag hybrid">Neo4j + pgvector</span>
+        <span class="tool-tag hybrid">Memgraph</span>
+        <span class="tool-tag hybrid">LangGraph</span>
+        <span class="tool-tag hybrid">LlamaIndex</span>
+        <span class="tool-tag hybrid">OpenSearch</span>
+      </div>
+    </div>
+
+    <p>A real production example of Hybrid RAG: Cedars-Sinai's Alzheimer's Disease Knowledge Base (AlzKB). They use a graph database to store biomedical entities — genes, drugs, diseases — and their relationships. They use a vector database to match natural language queries to the graph. The result is a system that can answer questions like "What genes are associated with early-onset Alzheimer's and which FDA-approved drugs target those pathways?" Neither pure vector search nor pure graph traversal alone could handle that query reliably.</p>
+
+    <div class="divider">· · ·</div>
+
+    <h2>When to Use Which?</h2>
+
+    <p>The honest answer: most teams should start with Semantic RAG and upgrade selectively. Here is a practical decision guide:</p>
+
+    <div class="decision-grid">
+      <div class="decision-card use-semantic">
+        <div class="decision-label s">Use Semantic RAG when...</div>
+        <ul class="decision-scenarios">
+          <li>📄 Building a document Q&amp;A or chatbot</li>
+          <li>🔍 Users ask open-ended, conversational questions</li>
+          <li>🚀 You need to ship in days, not months</li>
+          <li>📚 Your data is mostly unstructured text</li>
+          <li>💬 Questions rarely require connecting more than 2 documents</li>
+        </ul>
+      </div>
+      <div class="decision-card use-graph">
+        <div class="decision-label g">Use Graph RAG when...</div>
+        <ul class="decision-scenarios">
+          <li>🔗 Questions involve multi-hop reasoning ("A depends on B which owns C")</li>
+          <li>⚖️ You are in a regulated industry needing audit trails</li>
+          <li>🏭 Your domain is naturally graph-shaped (supply chain, org charts, dependencies)</li>
+          <li>🎯 Precision matters more than recall</li>
+          <li>🔬 Biomedical, legal, or financial compliance use cases</li>
+        </ul>
+      </div>
+      <div class="decision-card use-hybrid">
+        <div class="decision-label h">Use Hybrid RAG when...</div>
+        <ul class="decision-scenarios">
+          <li>🔀 You have both fuzzy open-ended queries AND structured relational questions in the same system</li>
+          <li>📊 You need semantic coverage for discovery but graph precision for confirmation</li>
+          <li>🏥 Enterprise AI where hallucination is unacceptable but question types vary widely</li>
+          <li>🔄 You already have a working Semantic RAG system and specific query patterns are consistently failing — that is your signal to add graph retrieval on those paths only</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>🔑 Practical rule of thumb</strong>
+      Ship Semantic RAG first. Instrument it with logs. When you identify the 10–15% of queries that consistently return wrong or incomplete answers, look at whether they are relationship questions. If they are, that is exactly where you add Graph RAG — not all at once, but on those specific query paths. This is the fastest, cheapest way to get to a Hybrid system in production.
+    </div>
+
+    <div class="divider">· · ·</div>
+
+    <p>Going back to that platform engineering incident — the question about downstream service failures was a graph question dressed up as a text question. The answer was not hiding in any document. It lived in the connections between documents. Semantic RAG could not find it because similarity of text is not the same as proximity of relationships. A graph traversal starting from "authentication service" and following "depends_on" edges would have answered it in one hop.</p>
+
+    <p>We did not rebuild the entire system. We added a knowledge graph layer for the dependency and architecture questions specifically, and kept the vector layer for everything else. That is Hybrid RAG in practice — not a complete replacement, but a targeted upgrade.</p>
+
+    <p>The right retrieval architecture is not the one with the most nodes and edges. It is the one that matches how your data is actually structured and how your users actually ask questions. Start simple. Measure where you fail. Upgrade precisely.</p>
+
+    <p><strong>Happy coding!!</strong> If you are building a RAG system and hitting retrieval failures, drop a comment or reach me on LinkedIn — I would genuinely like to know what you are running into. These architectures are evolving fast and real production experience is worth more than any paper right now.</p>
+
+    <p>In my next article, I will go hands-on — building a working Hybrid RAG pipeline with LangGraph, Neo4j, and pgvector, with a real infrastructure knowledge base as the test case. Stay connected.</p>
+
+  </article>
+
+  <footer class="article-footer">
+    <div class="tags">
+      <span class="tag">RAG</span>
+      <span class="tag">Graph RAG</span>
+      <span class="tag">Semantic Search</span>
+      <span class="tag">LLM Architecture</span>
+      <span class="tag">AI Engineering</span>
+    </div>
+    <div class="next-teaser" style="margin-top: 24px;">
+      <span class="label">Coming next</span>
+      <strong>Building a Hybrid RAG Pipeline — LangGraph + Neo4j + pgvector</strong>
+      <p>Hands-on implementation of a production Hybrid RAG system using a real infrastructure knowledge base as the test case.</p>
+    </div>
+  </footer>
+</div>
+
+<div class="footer-nav">
+  <div class="footer-nav-inner">
+    <span class="footer-copy">© 2026 Ritesh Kumar Agrahari · riteshnus.in</span>
+    <div class="footer-flinks">
+      <a href="https://linkedin.com/in/riteshagrahari" target="_blank">LinkedIn</a>
+      <a href="https://github.com/riteshnus" target="_blank">GitHub</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
