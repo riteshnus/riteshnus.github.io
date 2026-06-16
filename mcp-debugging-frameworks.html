@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debugging MCP Servers: The Tooling You Need Before Your Agent Goes to Production — Ritesh Kumar Agrahari</title>
+  <meta name="description" content="MCP Inspector, MCPJam, FastMCP, OpenTelemetry, CI testing — the complete debugging toolkit for MCP servers and the right approach for engineers building AI agents.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --text: #1a1a1a; --muted: #6b7280; --border: #e8e8e8;
+      --bg: #ffffff; --bg-soft: #f9fafb;
+      --accent: #1d4ed8; --accent-bg: #eff6ff; --accent-border: #bfdbfe;
+      --code-bg: #f8f7f4; --code-border: #e4e2db;
+      --highlight: #fff9e6;
+      --purple: #7c3aed; --purple-bg: #f5f3ff; --purple-border: #ddd6fe;
+      --teal: #0d9488; --teal-bg: #f0fdf9; --teal-border: #99f6e4;
+      --red: #dc2626; --red-bg: #fef2f2; --red-border: #fecaca;
+      --green: #16a34a; --green-bg: #f0fdf4; --green-border: #bbf7d0;
+      --orange: #ea580c; --orange-bg: #fff7ed; --orange-border: #fed7aa;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Source Serif 4', Georgia, serif; background: var(--bg); color: var(--text); font-size: 20px; line-height: 1.85; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent); }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(10,22,40,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .nav-inner { max-width: 728px; margin: 0 auto; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-home { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); font-family: -apple-system, sans-serif; text-decoration: none; }
+    .nav-home:hover { color: #fff; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { font-size: 13px; color: rgba(255,255,255,0.45); font-family: -apple-system, sans-serif; font-weight: 500; text-decoration: none; }
+    .nav-links a:hover { color: rgba(255,255,255,0.8); }
+
+    .container { max-width: 728px; margin: 0 auto; padding: 0 24px; }
+
+    /* HEADER */
+    .article-header { padding: 56px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 44px; }
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .tag { font-family: -apple-system, sans-serif; font-size: 12px; background: var(--bg-soft); color: var(--muted); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); }
+    h1 { font-family: 'Lora', Georgia, serif; font-size: 40px; font-weight: 600; line-height: 1.2; letter-spacing: -0.5px; margin-bottom: 16px; }
+    .subtitle { font-size: 21px; color: var(--muted); font-style: italic; line-height: 1.5; margin-bottom: 28px; }
+    .author-row { display: flex; align-items: center; gap: 14px; }
+    .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #1a5276, #2e86c1); display: flex; align-items: center; justify-content: center; font-family: -apple-system, sans-serif; font-weight: 700; color: white; font-size: 14px; flex-shrink: 0; }
+    .author-info { font-family: -apple-system, sans-serif; }
+    .author-name { font-size: 14px; font-weight: 600; }
+    .author-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
+
+    /* BODY */
+    .article-body p { margin-bottom: 26px; }
+    h2 { font-family: 'Lora', Georgia, serif; font-size: 28px; font-weight: 600; margin: 52px 0 16px; line-height: 1.3; }
+    h3 { font-family: 'Lora', Georgia, serif; font-size: 22px; font-weight: 600; margin: 36px 0 12px; }
+    blockquote { border-left: 3px solid var(--text); padding: 4px 0 4px 22px; margin: 32px 0; color: var(--muted); font-style: italic; font-size: 21px; line-height: 1.6; }
+
+    /* CALLOUTS */
+    .callout { border-left: 4px solid; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 28px 0; font-size: 16px; line-height: 1.7; }
+    .callout strong { display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-family: -apple-system, sans-serif; }
+    .callout.yellow { background: var(--highlight); border-color: #f0c040; }
+    .callout.yellow strong { color: #7a6200; }
+    .callout.red { background: var(--red-bg); border-color: var(--red); }
+    .callout.red strong { color: var(--red); }
+    .callout.green { background: var(--green-bg); border-color: var(--green); }
+    .callout.green strong { color: var(--green); }
+    .callout.purple { background: var(--purple-bg); border-color: var(--purple); }
+    .callout.purple strong { color: var(--purple); }
+
+    /* LISTS */
+    ul, ol { padding-left: 0; margin-bottom: 24px; list-style: none; }
+    ul li, ol li { padding: 5px 0 5px 26px; position: relative; font-size: 19px; line-height: 1.7; }
+    ul li::before { content: '—'; position: absolute; left: 0; color: var(--muted); }
+    ol { counter-reset: li; }
+    ol li { counter-increment: li; }
+    ol li::before { content: counter(li)'.'; position: absolute; left: 0; font-weight: 600; font-family: -apple-system, sans-serif; font-size: 15px; }
+
+    /* CODE */
+    code { font-family: 'SFMono-Regular', Consolas, Menlo, monospace; font-size: 15px; background: var(--code-bg); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--code-border); }
+    pre { background: #0d1b2a; border-radius: 10px; padding: 24px 28px; overflow-x: auto; margin: 28px 0; }
+    pre code { font-size: 14px; background: none; border: none; padding: 0; color: #cdd6f4; line-height: 1.75; }
+    .kw  { color: #cba6f7; }
+    .str { color: #a6e3a1; }
+    .cmt { color: #585b70; font-style: italic; }
+    .fn  { color: #89dceb; }
+    .num { color: #fab387; }
+    .cmd { color: #f38ba8; }
+
+    /* TOOL CARDS */
+    .tool-card { border-radius: 14px; padding: 26px 28px; margin: 32px 0; }
+    .tool-card.blue  { background: var(--accent-bg);  border: 1px solid var(--accent-border); }
+    .tool-card.purple { background: var(--purple-bg); border: 1px solid var(--purple-border); }
+    .tool-card.teal  { background: var(--teal-bg);   border: 1px solid var(--teal-border); }
+    .tool-card.orange { background: var(--orange-bg); border: 1px solid var(--orange-border); }
+    .tool-card.green { background: var(--green-bg);  border: 1px solid var(--green-border); }
+    .tool-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+    .tool-icon { font-size: 28px; flex-shrink: 0; }
+    .tool-meta {}
+    .tool-name { font-family: -apple-system, sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+    .tool-name.blue   { color: var(--accent); }
+    .tool-name.purple { color: var(--purple); }
+    .tool-name.teal   { color: var(--teal); }
+    .tool-name.orange { color: var(--orange); }
+    .tool-name.green  { color: var(--green); }
+    .tool-tagline { font-family: -apple-system, sans-serif; font-size: 13px; color: var(--muted); }
+    .tool-body { font-size: 16px; line-height: 1.75; margin-bottom: 14px; }
+    .tool-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .tool-tag { font-family: -apple-system, sans-serif; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+    .tool-tag.blue   { background: rgba(37,99,235,0.1);  color: var(--accent);  border: 1px solid var(--accent-border); }
+    .tool-tag.purple { background: rgba(124,58,237,0.1); color: var(--purple); border: 1px solid var(--purple-border); }
+    .tool-tag.teal   { background: rgba(13,148,136,0.1); color: var(--teal);   border: 1px solid var(--teal-border); }
+    .tool-tag.orange { background: rgba(234,88,12,0.1);  color: var(--orange); border: 1px solid var(--orange-border); }
+    .tool-tag.green  { background: rgba(22,163,74,0.1);  color: var(--green);  border: 1px solid var(--green-border); }
+
+    /* COMPARISON TABLE */
+    .compare-wrap { overflow-x: auto; margin: 36px 0; border-radius: 12px; border: 1px solid var(--border); }
+    .compare-table { width: 100%; border-collapse: collapse; font-family: -apple-system, sans-serif; font-size: 14px; }
+    .compare-table th { padding: 12px 16px; text-align: left; font-weight: 700; font-size: 12px; border-bottom: 1px solid var(--border); }
+    .compare-table th:nth-child(1) { background: var(--bg-soft); color: var(--muted); width: 26%; }
+    .compare-table th:nth-child(2) { background: #fef9ec; color: #92400e; }
+    .compare-table th:nth-child(3) { background: var(--accent-bg); color: var(--accent); }
+    .compare-table td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:nth-child(even) td { background: #fafafa; }
+    .compare-table td:first-child { font-weight: 600; color: var(--muted); background: var(--bg-soft) !important; font-size: 13px; }
+    .win { font-weight: 700; }
+    .win.good { color: var(--green); }
+    .win.bad  { color: var(--red); }
+
+    /* WORKFLOW STEPS */
+    .workflow { display: flex; flex-direction: column; gap: 0; margin: 28px 0; }
+    .wstep { display: grid; grid-template-columns: 36px 1fr; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+    .wstep:last-child { border-bottom: none; }
+    .wnum { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: white; font-family: -apple-system, sans-serif; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .wnum.purple { background: var(--purple); }
+    .wnum.teal { background: var(--teal); }
+    .wnum.orange { background: var(--orange); }
+    .wnum.green { background: var(--green); }
+    .wcontent {}
+    .wtitle { font-family: -apple-system, sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .wdesc { font-size: 16px; color: var(--muted); line-height: 1.65; }
+
+    .divider { text-align: center; margin: 44px 0; color: var(--muted); letter-spacing: 8px; font-size: 14px; }
+
+    /* FOOTER */
+    .article-footer { border-top: 1px solid var(--border); padding: 40px 0; margin-top: 56px; }
+    .next-teaser { background: var(--bg-soft); border: 1px solid var(--border); border-radius: 10px; padding: 22px 26px; margin-top: 24px; font-family: -apple-system, sans-serif; }
+    .next-teaser .label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); display: block; margin-bottom: 6px; }
+    .next-teaser strong { font-size: 15px; display: block; margin-bottom: 3px; }
+    .next-teaser p { font-size: 13px; color: var(--muted); margin: 0; }
+
+    .footer-nav { background: #0a1628; padding: 20px 0; }
+    .footer-nav-inner { max-width: 728px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.3); font-family: -apple-system, sans-serif; }
+    .footer-links { display: flex; gap: 18px; }
+    .footer-links a { font-size: 12px; color: rgba(255,255,255,0.4); font-family: -apple-system, sans-serif; text-decoration: none; }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 27px; }
+      h2 { font-size: 22px; }
+      body { font-size: 18px; }
+      .container { padding: 0 16px; }
+      .tool-card { padding: 18px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-home">Home</a>
+    <div class="nav-links">
+      <a href="/blog">Blog</a>
+      <a href="/about">About</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <header class="article-header">
+    <div class="tags">
+      <span class="tag">MCP</span>
+      <span class="tag">AI Agents</span>
+      <span class="tag">Platform Engineering</span>
+      <span class="tag">DevOps</span>
+      <span class="tag">Observability</span>
+    </div>
+    <h1>Debugging MCP Servers: The Tooling You Need Before Your Agent Goes to Production</h1>
+    <p class="subtitle">MCP Inspector, MCPJam, FastMCP, OpenTelemetry, and the right debugging approach for engineers building AI agents — from local development all the way to CI/CD.</p>
+    <div class="author-row">
+      <div class="avatar">RK</div>
+      <div class="author-info">
+        <div class="author-name">Ritesh Kumar Agrahari</div>
+        <div class="author-meta">Senior Platform Engineer · 11 min read · June 2026</div>
+      </div>
+    </div>
+  </header>
+
+  <article class="article-body">
+
+    <p>My agent kept calling the wrong tool. The LLM was correct — I could see it reasoning about which tool to use, and its logic was sound. The MCP server was correct — I had tested the tool function in isolation and it worked. But something between the two was wrong, and I had absolutely no way to see what it was.</p>
+
+    <p>No logs. No request trace. No response body. Just a failed agent run and a vague error message that told me nothing about which layer had broken. If this had been a REST API, I would have had Postman, Swagger, middleware logging, and an OpenTelemetry trace within the hour. With an MCP server, I was effectively debugging blind.</p>
+
+    <p>This is the problem that most engineers hit within their first week of building with the Model Context Protocol. MCP is a powerful standard — it gives AI agents a clean, structured way to interact with tools, data sources, and services. But the debugging story has been, until recently, far behind what we expect from modern backend infrastructure.</p>
+
+    <p>That is changing. This article is a complete walkthrough of every tool and approach that exists today for debugging MCP servers — from your first local test all the way to production observability.</p>
+
+    <h2>Why MCP Servers Are Harder to Debug Than REST APIs</h2>
+
+    <p>To understand the debugging gap, you need to understand what MCP actually does under the hood. When your AI agent talks to an MCP server, it is exchanging JSON-RPC messages — typically over stdio (standard input/output) or HTTP/SSE. This is invisible by default. Unlike an HTTP request that you can intercept with a proxy or inspect in your browser's network tab, stdio communication happens between processes, in memory, with no built-in way to observe it.</p>
+
+    <p><em>For example</em>, when Claude calls a tool on your MCP server, the actual exchange looks like this at the protocol level:</p>
+
+    <pre><code><span class="cmt">// What Claude sends to your MCP server (JSON-RPC over stdio)</span>
+{
+  <span class="str">"jsonrpc"</span>: <span class="str">"2.0"</span>,
+  <span class="str">"id"</span>: <span class="num">1</span>,
+  <span class="str">"method"</span>: <span class="str">"tools/call"</span>,
+  <span class="str">"params"</span>: {
+    <span class="str">"name"</span>: <span class="str">"get_service_status"</span>,
+    <span class="str">"arguments"</span>: { <span class="str">"service_name"</span>: <span class="str">"auth-service"</span> }
+  }
+}
+
+<span class="cmt">// What your server responds</span>
+{
+  <span class="str">"jsonrpc"</span>: <span class="str">"2.0"</span>,
+  <span class="str">"id"</span>: <span class="num">1</span>,
+  <span class="str">"result"</span>: {
+    <span class="str">"content"</span>: [{ <span class="str">"type"</span>: <span class="str">"text"</span>, <span class="str">"text"</span>: <span class="str">"auth-service is healthy"</span> }]
+  }
+}</code></pre>
+
+    <p>When this works, you never see it. When it breaks, you also never see it — unless you have deliberately set up the tooling to intercept and surface these messages. That is the debugging gap.</p>
+
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th>REST API debugging</th>
+            <th>MCP server debugging (today)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Interactive test client</td>
+            <td><span class="win good">Postman / Insomnia</span></td>
+            <td>MCP Inspector, MCPJam</td>
+          </tr>
+          <tr>
+            <td>Schema browser</td>
+            <td><span class="win good">Swagger / OpenAPI UI</span></td>
+            <td>MCP Inspector tool list</td>
+          </tr>
+          <tr>
+            <td>Terminal quick-test</td>
+            <td><span class="win good">curl</span></td>
+            <td>MCP Inspector CLI (limited)</td>
+          </tr>
+          <tr>
+            <td>Request/response logging</td>
+            <td><span class="win good">Middleware (Express, FastAPI)</span></td>
+            <td>FastMCP logging, custom middleware</td>
+          </tr>
+          <tr>
+            <td>Distributed tracing</td>
+            <td><span class="win good">OpenTelemetry (mature)</span></td>
+            <td>FastMCP OTel, early stage</td>
+          </tr>
+          <tr>
+            <td>Observe real client traffic</td>
+            <td><span class="win good">Proxy / network tab</span></td>
+            <td><span class="win bad">Requires proxy layer (mcps-logger)</span></td>
+          </tr>
+          <tr>
+            <td>CI contract testing</td>
+            <td><span class="win good">Newman / Dredd / Pact</span></td>
+            <td>Bellwether, MCPSpec (early)</td>
+          </tr>
+          <tr>
+            <td>Schema drift detection</td>
+            <td><span class="win good">openapi-diff, Optic</span></td>
+            <td>Bellwether (growing)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The gap is real, but it is closing faster than you might think. Let us walk through every tool that exists today, what it actually does, and when to reach for it.</p>
+
+    <div class="divider">· · ·</div>
+
+    <h2>The Tools That Exist Today</h2>
+
+    <h3>1. MCP Inspector — Your Postman for MCP</h3>
+
+    <div class="tool-card blue">
+      <div class="tool-header">
+        <span class="tool-icon">🔍</span>
+        <div class="tool-meta">
+          <div class="tool-name blue">MCP Inspector</div>
+          <div class="tool-tagline">Official tool from Anthropic — browser-based interactive testing and debugging</div>
+        </div>
+      </div>
+      <div class="tool-body">The closest thing MCP has to Postman. Opens a web UI where you can browse all tools your server exposes, call them with custom parameters, see raw JSON-RPC request and response payloads, and watch the full message exchange in real time. Supports stdio, SSE, and Streamable HTTP transports.</div>
+      <div class="tool-tags">
+        <span class="tool-tag blue">Official</span>
+        <span class="tool-tag blue">Browser UI</span>
+        <span class="tool-tag blue">No install</span>
+        <span class="tool-tag blue">CLI mode</span>
+        <span class="tool-tag blue">CI-friendly</span>
+      </div>
+    </div>
+
+    <p>Getting started is one command — no installation needed:</p>
+
+    <pre><code><span class="cmt"># Launch against a Node.js MCP server</span>
+<span class="cmd">npx</span> @modelcontextprotocol/inspector node my-mcp-server.js
+
+<span class="cmt"># Launch against a Python MCP server</span>
+<span class="cmd">npx</span> @modelcontextprotocol/inspector python server.py
+
+<span class="cmt"># Launch against a running HTTP server</span>
+<span class="cmd">npx</span> @modelcontextprotocol/inspector --url http://localhost:3000/mcp
+
+<span class="cmt"># Custom ports if 6274/6277 are in use</span>
+<span class="cmd">PORT=8080 PROXY_PORT=8081</span> npx @modelcontextprotocol/inspector node server.js</code></pre>
+
+    <p>The UI runs at <code>http://localhost:6274</code>. The proxy that connects to your server runs at port <code>6277</code>. You will immediately see your server's full capability list — every tool, its input schema, its description, and whether it is responding correctly to <code>tools/list</code>.</p>
+
+    <p><strong>CLI mode for CI pipelines:</strong> This is the part most people miss. MCP Inspector also has a headless CLI mode that you can use in automated pipelines without a browser:</p>
+
+    <pre><code><span class="cmt"># List all tools (CI-friendly, returns JSON)</span>
+<span class="cmd">npx</span> @modelcontextprotocol/inspector --cli node server.js \
+  --method tools/list
+
+<span class="cmt"># Call a specific tool and assert on the response</span>
+<span class="cmd">npx</span> @modelcontextprotocol/inspector --cli node server.js \
+  --method tools/call \
+  --tool-name get_service_status \
+  --tool-arg service_name=auth-service</code></pre>
+
+    <div class="callout red">
+      <strong>⚠️ Security Warning — Update Immediately</strong>
+      CVE-2025-49596 is a critical remote code execution vulnerability in older versions of MCP Inspector. A malicious MCP server can execute arbitrary code on the machine running Inspector. Always run <code>npx @modelcontextprotocol/inspector@latest</code> to ensure you are on the patched version. If you are testing untrusted third-party MCP servers, run Inspector inside a container or VM.
+    </div>
+
+    <p>One important limitation to understand: <strong>MCP Inspector is not a traffic proxy</strong>. It acts as its own client — it shows you Inspector-to-server traffic, not Claude-to-server traffic or Cursor-to-server traffic. If your agent behaves differently than the Inspector does, you are seeing a different code path. To observe real client traffic, you need a proxy layer — more on that below.</p>
+
+    <h3>2. MCPJam Inspector — When You Need an LLM Playground</h3>
+
+    <div class="tool-card purple">
+      <div class="tool-header">
+        <span class="tool-icon">🎮</span>
+        <div class="tool-meta">
+          <div class="tool-name purple">MCPJam Inspector</div>
+          <div class="tool-tagline">Community tool with LLM playground + full conformance testing CLI</div>
+        </div>
+      </div>
+      <div class="tool-body">Extends the official Inspector concept with an actual LLM chat interface inside the testing UI — so you can simulate how an agent would select and call your tools in a real multi-turn conversation, not just call them manually one by one. The CLI is particularly powerful with <code>mcpjam server doctor</code> for one-shot health checks and OAuth validation.</div>
+      <div class="tool-tags">
+        <span class="tool-tag purple">LLM playground</span>
+        <span class="tool-tag purple">Conformance testing</span>
+        <span class="tool-tag purple">OAuth support</span>
+        <span class="tool-tag purple">CLI</span>
+      </div>
+    </div>
+
+    <pre><code><span class="cmt"># Install MCPJam CLI</span>
+<span class="cmd">npm i -g</span> @mcpjam/cli
+
+<span class="cmt"># One-shot health check — connectivity, auth, tool sweep</span>
+<span class="cmd">mcpjam</span> server doctor --url https://your-mcp-server.com/mcp
+
+<span class="cmt"># List tools</span>
+<span class="cmd">mcpjam</span> tools list --url https://your-mcp-server.com/mcp
+
+<span class="cmt"># Call a specific tool with a JSON params file</span>
+<span class="cmd">mcpjam</span> tools call \
+  --url https://your-mcp-server.com/mcp \
+  --tool-name get_service_status \
+  --tool-args @params.json \
+  --format json
+
+<span class="cmt"># Run protocol conformance validation</span>
+<span class="cmd">mcpjam</span> server conformance --url https://your-mcp-server.com/mcp</code></pre>
+
+    <p>The <code>conformance</code> command is particularly valuable before going to production — it validates your server against the MCP protocol specification across all protocol domains, including tool discovery, resource management, and session lifecycle. Think of it as an automated contract test that verifies your server is actually spec-compliant, not just "works on my machine."</p>
+
+    <p>Choose MCP Inspector for protocol-level debugging and CI pipelines. Choose MCPJam when you want to simulate how an LLM agent will actually behave — tool selection, multi-turn conversation flow, and edge cases in how your tools get called in context.</p>
+
+    <h3>3. FastMCP — The Framework That Brings Observability In</h3>
+
+    <div class="tool-card teal">
+      <div class="tool-header">
+        <span class="tool-icon">⚡</span>
+        <div class="tool-meta">
+          <div class="tool-name teal">FastMCP</div>
+          <div class="tool-tagline">Python-first MCP framework with built-in OpenTelemetry and structured logging</div>
+        </div>
+      </div>
+      <div class="tool-body">FastMCP is to MCP what FastAPI is to REST APIs. You define tools with Python decorators, the framework handles all JSON-RPC protocol plumbing, and it ships with built-in OpenTelemetry instrumentation — so you get distributed traces, spans, and metrics out of the box without setting up your own observability stack from scratch.</div>
+      <div class="tool-tags">
+        <span class="tool-tag teal">Python</span>
+        <span class="tool-tag teal">OpenTelemetry built-in</span>
+        <span class="tool-tag teal">Structured logging</span>
+        <span class="tool-tag teal">FastAPI-like DX</span>
+      </div>
+    </div>
+
+    <pre><code><span class="cmt"># Install FastMCP</span>
+<span class="cmd">pip install</span> fastmcp
+
+<span class="cmt"># A FastMCP server with built-in observability</span>
+<span class="kw">import</span> logging
+<span class="kw">from</span> fastmcp <span class="kw">import</span> FastMCP, Context
+
+logger = logging.getLogger(__name__)
+mcp = FastMCP(<span class="str">"platform-tools-server"</span>)
+
+<span class="kw">@mcp.tool()</span>
+<span class="kw">async def</span> <span class="fn">get_service_status</span>(service_name: str, ctx: Context) -> str:
+    <span class="str">"""Check the operational status of a platform service"""</span>
+    logger.info(
+        <span class="str">"Tool called: get_service_status"</span>,
+        extra={<span class="str">"service"</span>: service_name, <span class="str">"trace_id"</span>: ctx.request_id}
+    )
+    <span class="kw">try</span>:
+        result = check_service(service_name)
+        logger.info(<span class="str">"Tool succeeded"</span>, extra={<span class="str">"service"</span>: service_name, <span class="str">"status"</span>: result})
+        <span class="kw">return</span> result
+    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+        logger.error(<span class="str">"Tool failed"</span>, extra={<span class="str">"service"</span>: service_name}, exc_info=<span class="kw">True</span>)
+        <span class="kw">raise</span></code></pre>
+
+    <p>The key observability insight with FastMCP is correlation. Every tool invocation has a <code>request_id</code> available via the context object. Log that ID on every line and you can trace the full lifecycle of a single agent call through your logs — which tool was called, with what parameters, how long it took, whether it succeeded, and what it returned. Without this correlation, your logs are a flat list of events with no way to connect them.</p>
+
+    <p><em>For example</em>, when you add OpenTelemetry spans to your FastMCP tools, you can see in Jaeger or Grafana Tempo exactly where time is being spent: is the latency in the MCP protocol layer, in your business logic, or in the downstream API call? That distinction is impossible to make without distributed tracing.</p>
+
+    <h3>4. OpenTelemetry — Production-Grade Observability</h3>
+
+    <div class="tool-card orange">
+      <div class="tool-header">
+        <span class="tool-icon">📡</span>
+        <div class="tool-meta">
+          <div class="tool-name orange">OpenTelemetry for MCP</div>
+          <div class="tool-tagline">Vendor-neutral traces, metrics, and logs for production MCP server infrastructure</div>
+        </div>
+      </div>
+      <div class="tool-body">Once your MCP server moves beyond local development, you need production observability — not just logs, but distributed traces that show you the full call chain from agent decision to tool execution to downstream API response. OpenTelemetry's GenAI semantic conventions now include specific attributes for MCP tool invocations, making this a first-class citizen in your observability stack.</div>
+      <div class="tool-tags">
+        <span class="tool-tag orange">Traces</span>
+        <span class="tool-tag orange">Metrics</span>
+        <span class="tool-tag orange">Logs</span>
+        <span class="tool-tag orange">Jaeger / Tempo / Datadog</span>
+        <span class="tool-tag orange">GenAI conventions</span>
+      </div>
+    </div>
+
+    <pre><code><span class="cmt">// Node.js MCP server with OpenTelemetry (SDK setup)</span>
+<span class="kw">import</span> { NodeSDK } <span class="kw">from</span> <span class="str">"@opentelemetry/sdk-node"</span>;
+<span class="kw">import</span> { OTLPTraceExporter } <span class="kw">from</span> <span class="str">"@opentelemetry/exporter-trace-otlp-http"</span>;
+<span class="kw">import</span> { resourceFromAttributes } <span class="kw">from</span> <span class="str">"@opentelemetry/resources"</span>;
+
+<span class="kw">const</span> sdk = <span class="kw">new</span> <span class="fn">NodeSDK</span>({
+  resource: <span class="fn">resourceFromAttributes</span>({
+    <span class="str">"service.name"</span>:       <span class="str">"platform-tools-mcp-server"</span>,
+    <span class="str">"mcp.server.name"</span>:    <span class="str">"platform-tools"</span>,
+    <span class="str">"deployment.env"</span>:     process.env.ENV,
+  }),
+  traceExporter: <span class="kw">new</span> <span class="fn">OTLPTraceExporter</span>({
+    url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT + <span class="str">"/v1/traces"</span>,
+  }),
+});
+sdk.start();
+
+<span class="cmt">// Instrument your tool calls with spans</span>
+<span class="kw">import</span> { trace } <span class="kw">from</span> <span class="str">"@opentelemetry/api"</span>;
+<span class="kw">const</span> tracer = trace.<span class="fn">getTracer</span>(<span class="str">"mcp-tools"</span>);
+
+<span class="kw">async function</span> <span class="fn">getServiceStatus</span>(serviceName: string) {
+  <span class="kw">return</span> tracer.<span class="fn">startActiveSpan</span>(<span class="str">"tool.get_service_status"</span>, <span class="kw">async</span> (span) => {
+    span.<span class="fn">setAttributes</span>({
+      <span class="str">"mcp.tool.name"</span>: <span class="str">"get_service_status"</span>,
+      <span class="str">"mcp.tool.input.service_name"</span>: serviceName,
+    });
+    <span class="kw">try</span> {
+      <span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">checkService</span>(serviceName);
+      span.<span class="fn">setStatus</span>({ code: SpanStatusCode.OK });
+      <span class="kw">return</span> result;
+    } <span class="kw">catch</span> (err) {
+      span.<span class="fn">recordException</span>(err);
+      span.<span class="fn">setStatus</span>({ code: SpanStatusCode.ERROR });
+      <span class="kw">throw</span> err;
+    } <span class="kw">finally</span> {
+      span.<span class="fn">end</span>();
+    }
+  });
+}</code></pre>
+
+    <div class="callout yellow">
+      <strong>💡 Critical insight on trace correlation</strong>
+      Always correlate trace IDs between your MCP server logs and whatever LLM client or agent framework you are using. Without this, you will "see" traces but still struggle to connect a specific failed agent run to the exact tool execution that caused it. Log the trace ID on every line of your tool handler — it is the thread that connects everything together at 3am during an incident.
+    </div>
+
+    <p>The key metrics to instrument on every MCP server in production:</p>
+    <ul>
+      <li><strong>Tool call latency</strong> — p50, p95, p99 per tool. Which tools are slow and how consistently.</li>
+      <li><strong>Tool error rate</strong> — broken down by tool name and error type. Are certain tools failing more than others?</li>
+      <li><strong>Tool call volume</strong> — which tools are actually being used by agents. Often reveals that half your tools are never called.</li>
+      <li><strong>Downstream dependency latency</strong> — the time your tool spends waiting for external APIs. This is usually where most latency lives.</li>
+    </ul>
+
+    <h3>5. mcps-logger / Proxy Approach — Seeing Real Agent Traffic</h3>
+
+    <div class="tool-card green">
+      <div class="tool-header">
+        <span class="tool-icon">🔀</span>
+        <div class="tool-meta">
+          <div class="tool-name green">mcps-logger / Traffic Proxy</div>
+          <div class="tool-tagline">Intercept and log real Claude-to-server or Cursor-to-server MCP traffic</div>
+        </div>
+      </div>
+      <div class="tool-body">MCP Inspector can only show you Inspector-to-server traffic — not what Claude or your agent actually sends. To see real production-like traffic from an LLM client to your server, you need a proxy layer that sits in the actual data path. Tools like mcps-logger and emceepee intercept the stdio stream between your agent client and your MCP server, logging every JSON-RPC message without modifying them.</div>
+      <div class="tool-tags">
+        <span class="tool-tag green">Real traffic</span>
+        <span class="tool-tag green">stdio intercept</span>
+        <span class="tool-tag green">Claude-to-server</span>
+        <span class="tool-tag green">Non-invasive</span>
+      </div>
+    </div>
+
+    <p>This matters more than it sounds. In practice, an LLM client calls your tools differently than you do manually in Inspector. The LLM may call tools in a different sequence, pass different argument shapes, or trigger edge cases in your tool schema that you never thought to test manually. A proxy logger surfaces exactly what is happening in the real call path.</p>
+
+    <div class="divider">· · ·</div>
+
+    <h2>CI/CD for MCP Servers — The Part Most Teams Skip</h2>
+
+    <p>Manual testing is how you build confidence in development. Automated testing in CI is how you stop regressions from shipping to production on a Friday afternoon. The MCP tooling for CI is early but growing fast.</p>
+
+    <p><strong>Schema drift is the most underrated failure mode.</strong> As one engineering team found out: "So many MCP servers silently change tool signatures between versions, and you never know if something broke until a user complains." Your tools are a contract with every agent that calls them. If you rename a parameter, change a return type, or remove a tool — anything that depends on your MCP server breaks silently.</p>
+
+    <p>Here is the three-gate testing approach that is emerging as a best practice for MCP servers in CI:</p>
+
+    <div class="workflow">
+      <div class="wstep">
+        <div class="wnum">1</div>
+        <div class="wcontent">
+          <div class="wtitle">Protocol compliance check</div>
+          <div class="wdesc">Use MCP Inspector CLI or MCPJam conformance to verify your server correctly implements the MCP spec — <code>initialize</code> handshake, <code>tools/list</code> response format, error handling. This catches protocol-level bugs before anything else.</div>
+        </div>
+      </div>
+      <div class="wstep">
+        <div class="wnum purple">2</div>
+        <div class="wcontent">
+          <div class="wtitle">Schema snapshot test</div>
+          <div class="wdesc">Take a snapshot of your server's complete tool schema — every tool name, parameter name, type, and description. On every PR, compare against the previous snapshot. Any change to the public schema fails the build with a clear diff. Bellwether automates this. A simpler approach: write a test that calls <code>tools/list</code> and asserts on the exact JSON output.</div>
+        </div>
+      </div>
+      <div class="wstep">
+        <div class="wnum teal">3</div>
+        <div class="wcontent">
+          <div class="wtitle">Tool call assertions</div>
+          <div class="wdesc">Call each critical tool with known inputs and assert on the response structure, not just the status code. Use MCP Inspector CLI, mcp-test, or MCPSpec for this. The key: test the response contract, not the business logic. Business logic belongs in unit tests. Here you are testing that the MCP layer correctly wraps and returns your tool's output.</div>
+        </div>
+      </div>
+    </div>
+
+    <pre><code><span class="cmt">#!/bin/bash
+# Example CI script using MCP Inspector CLI</span>
+
+<span class="cmt"># Gate 1: Protocol compliance</span>
+<span class="cmd">npx</span> @modelcontextprotocol/inspector@latest --cli node server.js \
+  --method tools/list > tools_output.json
+
+<span class="cmt"># Gate 2: Schema snapshot comparison</span>
+<span class="kw">if</span> ! diff tools_output.json tools_snapshot.json; <span class="kw">then</span>
+  echo <span class="str">"❌ Tool schema changed — review diff before merging"</span>
+  exit 1
+<span class="kw">fi</span>
+
+<span class="cmt"># Gate 3: Tool call assertions</span>
+<span class="cmd">npx</span> @modelcontextprotocol/inspector@latest --cli node server.js \
+  --method tools/call \
+  --tool-name get_service_status \
+  --tool-arg service_name=test-service \
+  | <span class="cmd">jq</span> -e <span class="str">'.result.content[0].text | length > 0'</span> \
+  || (echo <span class="str">"❌ Tool returned empty response"</span> && exit 1)
+
+echo <span class="str">"✅ All MCP gates passed"</span></code></pre>
+
+    <div class="divider">· · ·</div>
+
+    <h2>The Right Approach for Engineers Building Agents That Connect to MCP</h2>
+
+    <p>If you are not just building an MCP server but also building an agent that consumes MCP servers — or using an existing MCP server as a tool source — the debugging approach shifts. You are no longer just validating that your server implements the protocol correctly. You are debugging why your agent is selecting or not selecting certain tools, why it is passing arguments in unexpected ways, and why a multi-step tool chain is failing partway through.</p>
+
+    <p>Here is the recommended debugging workflow from day one to production:</p>
+
+    <div class="workflow">
+      <div class="wstep">
+        <div class="wnum">1</div>
+        <div class="wcontent">
+          <div class="wtitle">Local: Start with MCP Inspector</div>
+          <div class="wdesc">Before writing your agent, validate that every tool on the MCP server you are connecting to works correctly in isolation. Call each tool manually with edge-case inputs. Confirm the response schemas match what you expect. Never assume — always verify the contract before you build on top of it.</div>
+        </div>
+      </div>
+      <div class="wstep">
+        <div class="wnum purple">2</div>
+        <div class="wcontent">
+          <div class="wtitle">Development: Add structured logging and trace IDs from day one</div>
+          <div class="wdesc">Every tool call in your agent code should log the tool name, inputs (sanitised), and a trace ID that correlates to the agent run. Do not wait until debugging to add this — it is 10 lines of code upfront and saves hours when something breaks.</div>
+        </div>
+      </div>
+      <div class="wstep">
+        <div class="wnum teal">3</div>
+        <div class="wcontent">
+          <div class="wtitle">Testing: Use MCPJam for realistic agent simulation</div>
+          <div class="wdesc">Before deploying, run your actual use-case queries through MCPJam's LLM playground with your connected MCP servers. Watch how the LLM selects tools, what arguments it passes, and whether the response is being used correctly. This surfaces LLM-level bugs that unit tests cannot catch.</div>
+        </div>
+      </div>
+      <div class="wstep">
+        <div class="wnum orange">4</div>
+        <div class="wcontent">
+          <div class="wtitle">Pre-production: Schema snapshot + conformance in CI</div>
+          <div class="wdesc">Lock the schema of every MCP server your agent depends on. Any change to that schema is a potential breaking change for your agent. Fail the build when it changes, review the diff deliberately, and update your agent's expectations accordingly. This is dependency management for AI tools.</div>
+        </div>
+      </div>
+      <div class="wstep">
+        <div class="wnum green">5</div>
+        <div class="wcontent">
+          <div class="wtitle">Production: OpenTelemetry traces on every tool call</div>
+          <div class="wdesc">Instrument every tool invocation with a span. Export to your existing observability backend — Jaeger, Grafana Tempo, Datadog, or whatever your platform already uses. Alert on tool error rate spikes and latency p95 regressions. Treat your MCP server like the production service it is — because it is.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout purple">
+      <strong>🔑 The most important mental shift</strong>
+      MCP servers are infrastructure, not scripts. The moment an AI agent in production depends on your MCP server, it is a production service that needs logging, tracing, alerting, versioning, and deployment pipelines. Treat it exactly as you would treat a microservice. The debugging tools may be younger, but the operational principles are identical.
+    </div>
+
+    <div class="divider">· · ·</div>
+
+    <p>Going back to that agent that kept calling the wrong tool — the fix was not in the LLM and it was not in the tool function. It was in the tool description. The MCP tool schema I had written for <code>get_service_health</code> was ambiguous — two tools had overlapping descriptions, and the LLM was consistently picking the wrong one. MCP Inspector's schema browser made this instantly visible the moment I looked at both tool descriptions side by side. Thirty seconds of debugging with the right tool versus hours of guessing without it.</p>
+
+    <p>The MCP debugging ecosystem is maturing fast. Six months ago, MCP Inspector was the only real option. Today you have a layered stack — Inspector for protocol testing, MCPJam for agent simulation, FastMCP for framework-level observability, OpenTelemetry for production traces, and a growing set of CI tools for schema governance. Use each layer at the right stage of your development lifecycle.</p>
+
+    <p>The engineers who will build reliable AI agents are not the ones who get lucky — they are the ones who instrument first, assume nothing, and treat their MCP servers with the same operational rigour they give to the rest of their stack.</p>
+
+    <p><strong>Happy coding!!</strong> If you are building MCP servers or AI agents and hitting debugging walls, drop a comment or reach me on LinkedIn — happy to dig into specific scenarios. And if you are using a tool or approach I have not covered here, I would genuinely like to hear about it.</p>
+
+    <p>In my next article, I will go into <strong>sandboxing AI agents</strong> — how to ensure an agent with MCP tool access cannot do more than it should, and what the current isolation primitives look like across different deployment environments. Stay connected.</p>
+
+  </article>
+
+  <footer class="article-footer">
+    <div class="tags">
+      <span class="tag">MCP</span>
+      <span class="tag">AI Agents</span>
+      <span class="tag">Platform Engineering</span>
+      <span class="tag">Observability</span>
+      <span class="tag">OpenTelemetry</span>
+      <span class="tag">DevOps</span>
+    </div>
+    <div class="next-teaser">
+      <span class="label">Coming next</span>
+      <strong>Sandboxing AI Agents: Isolation Primitives and What the Current Landscape Looks Like</strong>
+      <p>How to ensure an agent with MCP tool access cannot exceed its intended permissions — and what the real security boundaries look like today.</p>
+    </div>
+  </footer>
+</div>
+
+<div class="footer-nav">
+  <div class="footer-nav-inner">
+    <span class="footer-copy">© 2026 Ritesh Kumar Agrahari · riteshnus.in</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/riteshagrahari" target="_blank">LinkedIn</a>
+      <a href="https://github.com/riteshnus" target="_blank">GitHub</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
